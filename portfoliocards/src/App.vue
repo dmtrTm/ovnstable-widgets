@@ -1,6 +1,6 @@
 <template>
     <div id="app-portfoliocards">
-        <PortfolioCards/>
+        <PortfolioCards :network="network"/>
     </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
     props: {
         width: {
             type: String,
+        },
+
+        network: {
+            type: String,
+            default: 'polygon'
         }
     },
     components: {

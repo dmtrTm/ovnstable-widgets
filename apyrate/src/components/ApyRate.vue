@@ -2,7 +2,7 @@
     <v-container class="main">
         <div class="line-apy-container">
             <template v-if="payoutsApyData">
-                <LineChartApy :data="payoutsApyData"/>
+                <LineChartApy :data="payoutsApyData" :network="network"/>
             </template>
         </div>
     </v-container>
@@ -20,13 +20,38 @@ export default {
         LineChartApy
     },
 
-    props: {},
+    props: {
+        network: {
+            type: String,
+            default: 'polygon'
+        }
+    },
 
     data: () => ({
         payoutsApyData: [],
     }),
 
-    computed: {},
+    computed: {
+        widgetApi() {
+            if (this.network === null || this.network === 'polygon') {
+                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
+            } else if (this.network === 'avax') {
+                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
+            } else if (this.network === 'bsc') {
+                return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
+        },
+    },
+
+    /* eslint-disable no-unused-vars,no-undef */
+    watch: {
+        network: function (newVal, oldVal) {
+            this.getApyRateData();
+        },
+    },
 
     created() {
         this.getApyRateData();
@@ -61,11 +86,11 @@ export default {
         getApyRateData() {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": process.env.VUE_APP_WIDGET_API_URL
+                    "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
 
-            fetch(process.env.VUE_APP_WIDGET_API_URL + '/dapp/payouts', fetchOptions)
+            fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.fillData(value);

@@ -25,14 +25,39 @@ export default {
         MainCardApy,
     },
 
-    props: {},
+    props: {
+        network: {
+            type: String,
+            default: 'polygon'
+        }
+    },
 
     data: () => ({
         pcv: null,
         apyWeek: null,
     }),
 
-    computed: {},
+    computed: {
+        widgetApi() {
+            if (this.network === null || this.network === 'polygon') {
+                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
+            } else if (this.network === 'avax') {
+                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
+            } else if (this.network === 'bsc') {
+                return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
+        },
+    },
+
+    /* eslint-disable no-unused-vars,no-undef */
+    watch: {
+        network: function (newVal, oldVal) {
+            this.getMainCardsData();
+        },
+    },
 
     created() {
         this.getMainCardsData();
@@ -67,11 +92,11 @@ export default {
         getMainCardsData() {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": process.env.VUE_APP_WIDGET_API_URL
+                    "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
 
-            fetch(process.env.VUE_APP_WIDGET_API_URL + '/widget/avg-apy-info/week', fetchOptions)
+            fetch(this.widgetApi + '/widget/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.fillApyData(value);
@@ -79,7 +104,7 @@ export default {
                 console.log('Error get data: ' + reason);
             });
 
-            fetch(process.env.VUE_APP_WIDGET_API_URL + '/dapp/strategies', fetchOptions)
+            fetch(this.widgetApi + '/dapp/strategies', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.fillPcvData(value);

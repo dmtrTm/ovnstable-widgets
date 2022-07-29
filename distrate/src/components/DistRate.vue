@@ -19,13 +19,38 @@ export default {
         LineChartDist
     },
 
-    props: {},
+    props: {
+        network: {
+            type: String,
+            default: 'polygon'
+        }
+    },
 
     data: () => ({
         chartData: [],
     }),
 
-    computed: {},
+    computed: {
+        widgetApi() {
+            if (this.network === null || this.network === 'polygon') {
+                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
+            } else if (this.network === 'avax') {
+                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
+            } else if (this.network === 'bsc') {
+                return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
+        },
+    },
+
+    /* eslint-disable no-unused-vars,no-undef */
+    watch: {
+        network: function (newVal, oldVal) {
+            this.getDistRateData();
+        },
+    },
 
     created() {
         this.getDistRateData();
@@ -65,11 +90,11 @@ export default {
         getDistRateData() {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": process.env.VUE_APP_WIDGET_API_URL
+                    "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
 
-            fetch(process.env.VUE_APP_WIDGET_API_URL + '/widget/distribution-rate', fetchOptions)
+            fetch(this.widgetApi + '/widget/distribution-rate', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.fillData(value)

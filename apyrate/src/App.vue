@@ -1,6 +1,6 @@
 <template>
     <div id="app-apyrate">
-        <ApyRate/>
+        <ApyRate :network="network"/>
     </div>
 </template>
 
@@ -10,11 +10,18 @@
 import ApyRate from "./components/ApyRate";
 export default {
     name: 'App',
+
     props: {
         width: {
             type: String,
+        },
+
+        network: {
+            type: String,
+            default: 'polygon'
         }
     },
+
     components: {
         ApyRate,
     }

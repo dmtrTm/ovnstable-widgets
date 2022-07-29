@@ -1,6 +1,6 @@
 <template>
     <div id="app-distrate">
-        <DistRate/>
+        <DistRate :network="network"/>
     </div>
 </template>
 
@@ -10,11 +10,18 @@
 import DistRate from "./components/DistRate";
 export default {
     name: 'App',
+
     props: {
         width: {
             type: String,
+        },
+
+        network: {
+            type: String,
+            default: 'polygon'
         }
     },
+
     components: {
         DistRate,
     }

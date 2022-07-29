@@ -73,11 +73,20 @@ export default {
             type: Object,
             default: null,
         },
+
+        network: {
+            type: String,
+            default: 'polygon'
+        }
     },
 
     watch: {
         data: function (newVal, oldVal) {
             this.redraw();
+        },
+
+        network: function (newVal, oldVal) {
+            this.zoomChart("week");
         },
     },
 
@@ -94,6 +103,19 @@ export default {
     computed: {
         isMobile() {
             return window.innerWidth <= 960;
+        },
+
+        widgetApi() {
+            if (this.network === null || this.network === 'polygon') {
+                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
+            } else if (this.network === 'avax') {
+                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
+            } else if (this.network === 'bsc') {
+                return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
         },
     },
 
@@ -112,11 +134,11 @@ export default {
 
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": process.env.VUE_APP_WIDGET_API_URL
+                    "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
 
-            await fetch(process.env.VUE_APP_WIDGET_API_URL + '/widget/avg-apy-info/' + zoom, fetchOptions)
+            await fetch(this.widgetApi + '/widget/avg-apy-info/' + zoom, fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.avgApy = value;

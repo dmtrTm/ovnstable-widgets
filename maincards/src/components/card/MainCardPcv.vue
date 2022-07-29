@@ -1,5 +1,5 @@
 <template>
-    <div class="main-card-container" @click="openLink('https://app.overnight.fi/fund')">
+    <div class="main-card-container" @click="openLink()">
         <div class="shield-img">
             <svg width="198" height="234" viewBox="0 0 198 234" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M111.789 256C111.789 256 6 229.604 6 45.8492C41.2629 42.9955 75.8125 39.0208 111.789 6C147.765 38.9189 182.315 42.9955 217.578 45.8492C217.68 229.604 111.789 256 111.789 256Z"
@@ -33,9 +33,9 @@
                 {{ value }}
             </label>
             <div class="network-img-container">
-                <img class="network-img-polygon" alt="Polygon logo"
-                     @click="openOnPolygon"
-                     :src="require('../../assets/networks/polygon.png')">
+                <img class="network-img"
+                     @click="openOnNetworkExplorer"
+                     :src="require('../../assets/networks/' + network + '.png')">
             </div>
         </v-row>
 
@@ -62,6 +62,11 @@ export default {
             type: String,
             default: null,
         },
+
+        network: {
+            type: String,
+            default: 'polygon'
+        }
     },
 
     components: {},
@@ -77,12 +82,30 @@ export default {
     },
 
     methods: {
-        openLink(url) {
-            window.open(url, '_blank').focus();
+        openLink() {
+            if (this.network === null || this.network === 'polygon') {
+                window.open('https://app.overnight.fi/fund', '_blank').focus();
+            } else if (this.network === 'avax') {
+                window.open('https://avax.overnight.fi/fund', '_blank').focus();
+            } else if (this.network === 'bsc') {
+                window.open('https://bsc.overnight.fi/fund', '_blank').focus();
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
         },
 
-        openOnPolygon() {
-            window.open('https://polygonscan.com/address/0x236eeC6359fb44CCe8f97E99387aa7F8cd5cdE1f', '_blank').focus();
+        openOnNetworkExplorer() {
+            if (this.network === null || this.network === 'polygon') {
+                window.open('https://polygonscan.com/address/0x236eeC6359fb44CCe8f97E99387aa7F8cd5cdE1f', '_blank').focus();
+            } else if (this.network === 'avax') {
+                window.open('https://snowtrace.io/address/0xe80772Eaf6e2E18B651F160Bc9158b2A5caFCA65', '_blank').focus();
+            } else if (this.network === 'bsc') {
+                window.open('https://bscscan.com/address/0xe80772Eaf6e2E18B651F160Bc9158b2A5caFCA65', '_blank').focus();
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
         }
     }
 }
@@ -111,7 +134,7 @@ export default {
         margin-left: 16px !important;
     }
 
-    .network-img-polygon {
+    .network-img {
         width: 32px !important;
         margin-top: 5px !important;
     }
@@ -161,7 +184,7 @@ export default {
         margin-left: 22px !important;
     }
 
-    .network-img-polygon {
+    .network-img {
         width: 40px !important;
         margin-top: 10px !important;
     }
@@ -206,7 +229,7 @@ export default {
     }
 }
 
-.network-img-polygon {
+.network-img {
     cursor: pointer !important;
 }
 

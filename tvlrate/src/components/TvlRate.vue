@@ -24,6 +24,11 @@ export default {
         network: {
             type: String,
             default: 'polygon'
+        },
+
+        product: {
+            type: String,
+            default: 'usd+'
         }
     },
 
@@ -61,6 +66,42 @@ export default {
 
     methods: {
 
+        getTotalTvl() {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": this.widgetApi
+                }
+            };
+
+            fetch(this.widgetApi + '/dapp/strategies', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    let strategies = value;
+                    strategies.sort((a,b) => b.netAssetValue - a.netAssetValue);
+
+                    let result = [];
+
+                    for (let i = 0; i < strategies.length; i++) {
+                        let element = strategies[i];
+
+                        result.push(
+                            {
+                                value: element.netAssetValue,
+                            }
+                        );
+                    }
+
+                    let sum = 0;
+                    result.forEach(dataItem => {
+                        sum += dataItem.value
+                    });
+
+                    this.totalUsdPlusValue = sum;
+                }).catch(reason => {
+                console.log('Error get data: ' + reason);
+            })
+        },
+
         fillData(value) {
             let widgetDataDictTvl = {};
             let widgetDataTvl = {
@@ -83,9 +124,37 @@ export default {
             }
 
             this.payoutsTvlData = widgetDataTvl;
+            this.getTotalTvl();
+        },
 
-            if (value && value.length > 0) {
-                this.totalUsdPlusValue = value[0].totalUsdPlus;
+        fillDataEts(value) {
+            let wmaticStrategyData = value;
+            let clientData = value.timeData;
+
+            let widgetTvlDataDict = {};
+            let widgetTvlData = {
+                labels: [],
+                datasets: [
+                    {
+                        fill: false,
+                        data: [],
+                    }
+                ]
+            };
+
+            [...clientData].forEach(item => {
+                widgetTvlDataDict[moment(item.date).format('DD.MM.YYYY')] = item.tvl;
+            });
+
+            for(let key in widgetTvlDataDict) {
+                widgetTvlData.labels.push(key);
+                widgetTvlData.datasets[0].data.push(widgetTvlDataDict[key]);
+            }
+
+            this.payoutsTvlData = widgetTvlData;
+
+            if (wmaticStrategyData) {
+                this.totalUsdPlusValue = wmaticStrategyData.tvl;
             }
         },
 
@@ -96,13 +165,25 @@ export default {
                 }
             };
 
-            fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
-                .then(value => value.json())
-                .then(value => {
-                    this.fillData(value);
-                }).catch(reason => {
-                console.log('Error get data: ' + reason);
-            })
+            if (this.product === 'usd+') {
+                fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.fillData(value);
+                    }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                })
+            } else if (this.product === 'ets') {
+                fetch(this.widgetApi + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf', fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.fillDataEts(value);
+                    }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                })
+            } else {
+                /* TODO: add widget stub */
+            }
         },
     }
 }

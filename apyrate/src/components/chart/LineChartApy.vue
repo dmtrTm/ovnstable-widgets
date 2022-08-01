@@ -77,6 +77,11 @@ export default {
         network: {
             type: String,
             default: 'polygon'
+        },
+
+        product: {
+            type: String,
+            default: 'usd+'
         }
     },
 
@@ -137,15 +142,27 @@ export default {
                     "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
-
-            await fetch(this.widgetApi + '/widget/avg-apy-info/' + zoom, fetchOptions)
-                .then(value => value.json())
-                .then(value => {
-                    this.avgApy = value;
-                    this.avgApy.date = moment(this.avgApy.date).format("DD MMM. ‘YY");
-                }).catch(reason => {
+            if (this.product === 'usd+') {
+                await fetch(this.widgetApi + '/widget/avg-apy-info/' + zoom, fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.avgApy = value;
+                        this.avgApy.date = moment(this.avgApy.date).format("DD MMM. ‘YY");
+                    }).catch(reason => {
+                        console.log('Error get data: ' + reason);
+                    })
+            } else if (this.product === 'ets') {
+                fetch(this.widgetApi + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf/avg-apy-info/' + zoom, fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.avgApy = value;
+                        this.avgApy.date = moment(this.avgApy.date).format("DD MMM. ‘YY");
+                    }).catch(reason => {
                     console.log('Error get data: ' + reason);
                 })
+            } else {
+                /* TODO: add widget stub */
+            }
 
             this.zoom = zoom;
 

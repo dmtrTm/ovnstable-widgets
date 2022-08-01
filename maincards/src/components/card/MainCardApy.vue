@@ -33,20 +33,42 @@
             </svg>
         </div>
 
-
-
-<!--        <v-row class="value-row"  @click="openLink('https://app.overnight.fi/fund')">
-            <label class="value-label">
-                {{ value }}
-            </label>
+        <v-row class="info-row">
             <v-spacer></v-spacer>
+            <label class="info-label">
+                {{ info }}
+            </label>
         </v-row>
 
-        <v-row class="label-row">
-            <label class="text-label">
-                {{ label }}
-            </label>
-        </v-row>-->
+        <v-row class="value-row">
+            <v-col cols="5" class="value-col" @click="openBestChainLink()">
+                <label class="value-label">
+                    {{ valueUsdPlus }}
+                </label>
+                <br/><br/>
+                <label class="text-label">
+                    {{ labelUsdPlus }}
+                </label>
+                <div class="network-img-container">
+                    <img class="network-img"
+                         :src="require('../../assets/networks/' + networkUsdPlus +'.png')">
+                </div>
+            </v-col>
+            <v-divider class="apy-divider" dark vertical></v-divider>
+            <v-col class="value-col" @click="openLink('https://market.overnight.fi/ets')">
+                <label class="value-label">
+                    {{ valueEts }}
+                </label>
+                <br/><br/>
+                <label class="text-label">
+                    <abbr title="Exchange-traded strategy">ETS</abbr> APY
+                </label>
+                <div class="network-img-container">
+                    <img class="network-img"
+                         :src="require('../../assets/networks/polygon.png')">
+                </div>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -80,6 +102,11 @@ export default {
             type: String,
             default: null,
         },
+
+        info: {
+            type: String,
+            default: null,
+        },
     },
 
     components: {},
@@ -97,6 +124,18 @@ export default {
     methods: {
         openLink(url) {
             window.open(url, '_blank').focus();
+        },
+
+        openBestChainLink() {
+            if (this.networkUsdPlus === 'polygon') {
+                this.openLink('https://app.overnight.fi/fund')
+            } else if (this.networkUsdPlus === 'avax') {
+                this.openLink('https://avax.overnight.fi/fund')
+            } else if (this.networkUsdPlus === 'bsc') {
+                this.openLink('https://bsc.overnight.fi/fund')
+            } else {
+                this.openLink('https://app.overnight.fi/fund')
+            }
         },
     }
 }
@@ -125,13 +164,12 @@ export default {
         width: 344px !important;
     }
 
-    .value-row, .label-row {
+    .value-row {
         margin-left: 25px !important;
     }
 
     .value-row {
-        margin-top: 47px !important;
-        margin-bottom: 12px !important;
+        margin-top: 25px !important;
     }
 
     .arrow-img {
@@ -141,6 +179,28 @@ export default {
     .arrow-img-mobile {
         margin-left: 180px;
         margin-top: 19px;
+    }
+
+    .info-row {
+        margin-right: 20px !important;
+        margin-top: 20px !important;
+    }
+
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.03em;
+    }
+
+    .apy-divider {
+        height: 100px !important;
+    }
+
+    .network-img {
+        width: 20px !important;
+        height: 20px !important;
     }
 }
 
@@ -165,13 +225,12 @@ export default {
         width: 527px !important;
     }
 
-    .value-row, .label-row {
+    .value-row {
         margin-left: 44px !important;
     }
 
     .value-row {
-        margin-top: 76px !important;
-        margin-bottom: 22px !important;
+        margin-top: 44px !important;
     }
 
     .arrow-img {
@@ -181,6 +240,28 @@ export default {
 
     .arrow-img-mobile {
         display: none !important;
+    }
+
+    .info-row {
+        margin-right: 20px !important;
+        margin-top: 20px !important;
+    }
+
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+    }
+
+    .apy-divider {
+        height: 128px !important;
+    }
+
+    .network-img {
+        width: 24px !important;
+        height: 24px !important;
     }
 }
 
@@ -222,7 +303,24 @@ export default {
     color: white;
 }
 
-.value-label, .text-label {
+.value-label, .text-label, .info-label, .value-col, .network-img-container {
     z-index: 100 !important;
+}
+
+.network-img-container {
+    display: inline-flex !important;
+    vertical-align: sub !important;
+    margin-left: 8px !important;
+}
+
+.apy-divider {
+    margin-right: 18px !important;
+}
+
+.info-label {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    font-feature-settings: 'pnum' on, 'lnum' on;
+    color: #4C586D;
 }
 </style>

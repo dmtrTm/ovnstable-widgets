@@ -7,7 +7,13 @@
         </v-row>
         <v-row>
             <v-col>
-                <MainCardApy />
+                <MainCardApy
+                        label-usd-plus="USD+ APY"
+                        :value-usd-plus="apyWeek"
+                        :network-usd-plus="bestChain"
+                        :value-ets="apyWeekEts"
+                        info="MAX APY in the past 7 days"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -32,28 +38,11 @@ export default {
     data: () => ({
         pcv: 0,
         apyWeek: null,
+        apyWeekEts: null,
+        bestChain: 'polygon',
     }),
 
     computed: {
-        widgetApi() {
-            if (this.network === null || this.network === 'polygon') {
-                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
-            } else if (this.network === 'avax') {
-                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
-            } else if (this.network === 'bsc') {
-                return process.env.VUE_APP_WIDGET_API_URL_BSC;
-            } else {
-                /* TODO: add widget stub */
-                return '';
-            }
-        },
-    },
-
-    /* eslint-disable no-unused-vars,no-undef */
-    watch: {
-        network: function (newVal, oldVal) {
-            this.getMainCardsData();
-        },
     },
 
     created() {
@@ -61,16 +50,6 @@ export default {
     },
 
     methods: {
-
-        fillApyData(value) {
-
-            if (value.value) {
-                this.apyWeek = this.$utils.formatMoney(value.value, 1) + '%';
-            } else {
-                this.apyWeek = '—';
-            }
-        },
-
         getPcvData(widgetApiUrl) {
             let fetchOptions = {
                 headers: {
@@ -97,20 +76,79 @@ export default {
                 });
         },
 
-        async getMainCardsData() {
+        getApyData(widgetApiUrl) {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": this.widgetApi
+                    "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
 
-            fetch(this.widgetApi + '/widget/avg-apy-info/week', fetchOptions)
+            return fetch(widgetApiUrl + '/widget/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
-                    // this.fillApyData(value);
+                    if (value.value) {
+                        return value.value;
+                    } else {
+                        return 0;
+                    }
                 }).catch(reason => {
-                console.log('Error get data: ' + reason);
-            });
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
+        getEtsApyData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
+                }
+            };
+
+            return fetch(widgetApiUrl + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf/avg-apy-info/week', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    if (value.value) {
+                        return value.value;
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
+        async getMainCardsData() {
+            this.bestChain = 'polygon';
+
+            let polygonApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let avaxApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
+            let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+            let etsApy = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+
+            if (etsApy) {
+                this.apyWeekEts = this.$utils.formatMoney(etsApy, 0) + '%';
+            } else {
+                this.apyWeekEts = '—';
+            }
+
+            if (polygonApy >= avaxApy && polygonApy >= bscApy) {
+                this.bestChain = 'polygon';
+                this.apyWeek = polygonApy;
+            } else if (avaxApy >= polygonApy && avaxApy >= bscApy) {
+                this.bestChain = 'avax';
+                this.apyWeek = avaxApy;
+            } else if (bscApy >= polygonApy && bscApy >= avaxApy) {
+                this.bestChain = 'bsc';
+                this.apyWeek = bscApy;
+            } else {
+                this.bestChain = 'polygon';
+                this.apyWeek = polygonApy;
+            }
+
+            if (this.apyWeek) {
+                this.apyWeek = this.$utils.formatMoney(this.apyWeek, 0) + '%';
+            } else {
+                this.apyWeek = '—';
+            }
 
             this.pcv = 0.0;
 

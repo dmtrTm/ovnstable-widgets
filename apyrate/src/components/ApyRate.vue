@@ -2,7 +2,7 @@
     <v-container class="main">
         <div class="line-apy-container">
             <template v-if="payoutsApyData">
-                <LineChartApy :data="payoutsApyData" :network="network"/>
+                <LineChartApy :data="payoutsApyData" :network="network" :product="product"/>
             </template>
         </div>
     </v-container>
@@ -24,6 +24,11 @@ export default {
         network: {
             type: String,
             default: 'polygon'
+        },
+
+        product: {
+            type: String,
+            default: 'usd+'
         }
     },
 
@@ -83,6 +88,32 @@ export default {
             this.payoutsApyData = widgetDataApy;
         },
 
+        fillDataEts(value) {
+            let clientData = value.timeData;
+
+            let widgetDataDict = {};
+            let widgetData = {
+                labels: [],
+                datasets: [
+                    {
+                        fill: false,
+                        data: [],
+                    }
+                ]
+            };
+
+            [...clientData].forEach(item => {
+                widgetDataDict[moment(item.date).format('DD.MM.YYYY')] = parseFloat(item.apy ? item.apy : 0.0).toFixed(4);
+            });
+
+            for(let key in widgetDataDict) {
+                widgetData.labels.push(key);
+                widgetData.datasets[0].data.push(widgetDataDict[key]);
+            }
+
+            this.payoutsApyData = widgetData;
+        },
+
         getApyRateData() {
             let fetchOptions = {
                 headers: {
@@ -90,14 +121,27 @@ export default {
                 }
             };
 
-            fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
-                .then(value => value.json())
-                .then(value => {
-                    this.fillData(value);
-                }).catch(reason => {
-                console.log('Error get data: ' + reason);
-                this.loading = false;
-            })
+            if (this.product === 'usd+') {
+                fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.fillData(value);
+                    }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                    this.loading = false;
+                })
+            } else if (this.product === 'ets') {
+                fetch(this.widgetApi + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf', fetchOptions)
+                    .then(value => value.json())
+                    .then(value => {
+                        this.fillDataEts(value);
+                    }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                    this.loading = false;
+                })
+            } else {
+                /* TODO: add widget stub */
+            }
         },
     }
 }

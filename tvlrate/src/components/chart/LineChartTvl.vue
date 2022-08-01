@@ -12,7 +12,7 @@
                 <v-row class="header-text-sub-row">
                     <v-spacer></v-spacer>
                     <label class="chart-sub-title-tvl">
-                        {{ totalUsdPlusValue ? 'past 24 hours' : '' }}
+                        {{ totalUsdPlusValue ? 'past 2 hours' : '' }}
                     </label>
                 </v-row>
             </v-col>
@@ -173,7 +173,6 @@ export default {
                 chart: {
                     type: 'area',
                     height: 250,
-                    width: 760,
 
                     sparkline: {
                         enabled: false,
@@ -200,7 +199,7 @@ export default {
 
                 stroke: {
                     curve: 'straight',
-                    width: 2,
+                    width: this.isMobile ? 1 : 2,
                     colors: ["#3D8DFF"],
                 },
 

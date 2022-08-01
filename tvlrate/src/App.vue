@@ -1,6 +1,6 @@
 <template>
     <div id="app-tvlrate">
-        <TvlRate :network="network"/>
+        <TvlRate :network="network" :product="product"/>
     </div>
 </template>
 
@@ -19,6 +19,11 @@ export default {
         network: {
             type: String,
             default: 'polygon'
+        },
+
+        product: {
+            type: String,
+            default: 'usd+'
         }
     },
 

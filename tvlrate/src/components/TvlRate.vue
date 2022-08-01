@@ -2,7 +2,7 @@
     <v-container class="main">
         <div class="line-tvl-container">
             <template v-if="payoutsTvlData">
-                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue"/>
+                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue" :product="product"/>
             </template>
         </div>
     </v-container>
@@ -51,7 +51,6 @@ export default {
             }
         },
     },
-
 
     /* eslint-disable no-unused-vars,no-undef */
     watch: {
@@ -188,7 +187,6 @@ export default {
     }
 }
 </script>
-
 
 <style scoped>
 

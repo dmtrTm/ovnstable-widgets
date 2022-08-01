@@ -28,15 +28,17 @@
             </svg>
         </div>
 
+        <v-row class="info-row">
+            <v-spacer></v-spacer>
+            <label class="info-label">
+                {{ info }}
+            </label>
+        </v-row>
+
         <v-row class="value-row">
             <label class="value-label">
                 {{ value }}
             </label>
-            <div class="network-img-container">
-                <img class="network-img"
-                     @click="openOnNetworkExplorer"
-                     :src="require('../../assets/networks/' + network + '.png')">
-            </div>
         </v-row>
 
         <v-row class="label-row">
@@ -54,6 +56,11 @@ export default {
 
     props: {
         label: {
+            type: String,
+            default: null,
+        },
+
+        info: {
             type: String,
             default: null,
         },
@@ -83,30 +90,8 @@ export default {
 
     methods: {
         openLink() {
-            if (this.network === null || this.network === 'polygon') {
-                window.open('https://app.overnight.fi/fund', '_blank').focus();
-            } else if (this.network === 'avax') {
-                window.open('https://avax.overnight.fi/fund', '_blank').focus();
-            } else if (this.network === 'bsc') {
-                window.open('https://bsc.overnight.fi/fund', '_blank').focus();
-            } else {
-                /* TODO: add widget stub */
-                return '';
-            }
+            window.open('https://app.overnight.fi/fund', '_blank').focus();
         },
-
-        openOnNetworkExplorer() {
-            if (this.network === null || this.network === 'polygon') {
-                window.open('https://polygonscan.com/address/0x236eeC6359fb44CCe8f97E99387aa7F8cd5cdE1f', '_blank').focus();
-            } else if (this.network === 'avax') {
-                window.open('https://snowtrace.io/address/0xe80772Eaf6e2E18B651F160Bc9158b2A5caFCA65', '_blank').focus();
-            } else if (this.network === 'bsc') {
-                window.open('https://bscscan.com/address/0xe80772Eaf6e2E18B651F160Bc9158b2A5caFCA65', '_blank').focus();
-            } else {
-                /* TODO: add widget stub */
-                return '';
-            }
-        }
     }
 }
 </script>
@@ -129,14 +114,12 @@ export default {
         letter-spacing: 0.04em !important;
     }
 
-    .network-img-container {
-        height: 32px !important;
-        margin-left: 16px !important;
-    }
-
-    .network-img {
-        width: 32px !important;
-        margin-top: 5px !important;
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.03em;
     }
 
     .main-card-container {
@@ -148,8 +131,13 @@ export default {
         margin-left: 25px !important;
     }
 
+    .info-row {
+        margin-right: 14px !important;
+        margin-top: 10px !important;
+    }
+
     .value-row {
-        margin-top: 47px !important;
+        margin-top: 37px !important;
         margin-bottom: 12px !important;
     }
 
@@ -179,14 +167,12 @@ export default {
         letter-spacing: 0.04em !important;
     }
 
-    .network-img-container {
-        height: 40px !important;
-        margin-left: 22px !important;
-    }
-
-    .network-img {
-        width: 40px !important;
-        margin-top: 10px !important;
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
     }
 
     .main-card-container {
@@ -198,8 +184,13 @@ export default {
         margin-left: 44px !important;
     }
 
+    .info-row {
+        margin-right: 20px !important;
+        margin-top: 20px !important;
+    }
+
     .value-row {
-        margin-top: 76px !important;
+        margin-top: 56px !important;
         margin-bottom: 22px !important;
     }
 
@@ -229,10 +220,6 @@ export default {
     }
 }
 
-.network-img {
-    cursor: pointer !important;
-}
-
 .main-card-container {
     border: 1px solid #29323E !important;
     background: #0A1632 !important;
@@ -255,7 +242,14 @@ export default {
     color: white;
 }
 
-.value-label, .text-label, .network-img-container {
+.info-label {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    font-feature-settings: 'pnum' on, 'lnum' on;
+    color: #4C586D;
+}
+
+.value-label, .text-label, .info-label {
     z-index: 100 !important;
 }
 </style>

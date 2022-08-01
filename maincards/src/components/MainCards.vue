@@ -2,12 +2,12 @@
     <v-container class="main">
         <v-row>
             <v-col>
-                <MainCardPcv label="Total Value Locked" :value="pcv" :network="network"/>
+                <MainCardPcv info="ALL Chains" label="Total Value Locked" :value="pcv"/>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <MainCardApy label="USD+ APY based on 7-day average" :value="apyWeek"/>
+                <MainCardApy label="USD+ APY based on 7-day average"/>
             </v-col>
         </v-row>
     </v-container>
@@ -17,6 +17,7 @@
 
 import MainCardPcv from "./card/MainCardPcv";
 import MainCardApy from "./card/MainCardApy";
+
 export default {
     name: 'MainCards',
 
@@ -26,14 +27,10 @@ export default {
     },
 
     props: {
-        network: {
-            type: String,
-            default: 'polygon'
-        }
     },
 
     data: () => ({
-        pcv: null,
+        pcv: 0,
         apyWeek: null,
     }),
 
@@ -74,22 +71,33 @@ export default {
             }
         },
 
-        fillPcvData(value) {
-
-            if (value) {
-                let sum = 0.0;
-
-                for (let i = 0; i < value.length; i++) {
-                    sum += value[i].netAssetValue;
+        getPcvData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
                 }
+            };
 
-                this.pcv = '$ ' + this.$utils.formatMoneyComma(sum, 2);
-            } else {
-                this.pcv = '—';
-            }
+            return fetch(widgetApiUrl + '/dapp/strategies', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    if (value) {
+                        let sum = 0.0;
+
+                        for (let i = 0; i < value.length; i++) {
+                            sum += value[i].netAssetValue;
+                        }
+
+                        return sum;
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
         },
 
-        getMainCardsData() {
+        async getMainCardsData() {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": this.widgetApi
@@ -99,18 +107,24 @@ export default {
             fetch(this.widgetApi + '/widget/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
-                    this.fillApyData(value);
+                    // this.fillApyData(value);
                 }).catch(reason => {
                 console.log('Error get data: ' + reason);
             });
 
-            fetch(this.widgetApi + '/dapp/strategies', fetchOptions)
-                .then(value => value.json())
-                .then(value => {
-                    this.fillPcvData(value);
-                }).catch(reason => {
-                console.log('Error get data: ' + reason);
-            });
+            this.pcv = 0.0;
+
+            let polygonPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
+            let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+
+            this.pcv = polygonPcv + avaxPcv + bscPcv;
+
+            if (this.pcv) {
+                this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);
+            } else {
+                this.pcv = '—';
+            }
         },
     }
 }

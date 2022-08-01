@@ -1,6 +1,6 @@
 <template>
     <div id="app-maincards">
-        <MainCards :network="network"/>
+        <MainCards />
     </div>
 </template>
 
@@ -13,11 +13,6 @@ export default {
     props: {
         width: {
             type: String,
-        },
-
-        network: {
-            type: String,
-            default: 'polygon'
         }
     },
     components: {

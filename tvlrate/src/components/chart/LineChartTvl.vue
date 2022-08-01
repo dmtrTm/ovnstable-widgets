@@ -3,7 +3,7 @@
         <v-row class="chart-header-row">
             <v-col cols="12">
                 <v-row class="header-text-row">
-                    <label class="chart-title">{{ totalUsdPlusValue ? 'USD+ TVL' : '' }}</label>
+                    <label class="chart-title">{{ totalUsdPlusValue ? (product === 'usd+' ? 'USD+ TVL' : 'USD+/WMATIC TVL') : '' }}</label>
                     <v-spacer></v-spacer>
                     <label class="chart-title-tvl">
                         {{ totalUsdPlusValue ? ('$' + $utils.formatMoneyComma(totalUsdPlusValue, 2)) : '' }}
@@ -18,13 +18,13 @@
             </v-col>
         </v-row>
 
-        <div class="chart-row" id="line-chart-tvl"></div>
+        <div class="chart-row" :id="'line-chart-tvl-' + (product === 'usd+' ? 'usd-plus' : 'ets')"></div>
 
         <v-row class="zoom-row">
             <v-spacer></v-spacer>
             <v-btn
                     text
-                    id="week-zoom-btn-tvl"
+                    :id="'week-zoom-btn-tvl-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('week')"
@@ -33,7 +33,7 @@
             </v-btn>
             <v-btn
                     text
-                    id="month-zoom-btn-tvl"
+                    :id="'month-zoom-btn-tvl-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('month')"
@@ -42,7 +42,7 @@
             </v-btn>
             <v-btn
                     text
-                    id="all-zoom-btn-tvl"
+                    :id="'all-zoom-btn-tvl-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('all')"
@@ -74,10 +74,19 @@ export default {
             type: Number,
             default: null,
         },
+
+        product: {
+            type: String,
+            default: 'usd+'
+        }
     },
 
     watch: {
         data: function (newVal, oldVal) {
+            this.redraw();
+        },
+
+        product: function (newVal, oldVal) {
             this.redraw();
         },
     },
@@ -132,11 +141,11 @@ export default {
         },
 
         changeZoomBtnStyle() {
-            document.getElementById("week-zoom-btn-tvl").classList.remove("selected");
-            document.getElementById("month-zoom-btn-tvl").classList.remove("selected");
-            document.getElementById("all-zoom-btn-tvl").classList.remove("selected");
+            document.getElementById("week-zoom-btn-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
+            document.getElementById("month-zoom-btn-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
+            document.getElementById("all-zoom-btn-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
 
-            document.getElementById(this.zoom + "-zoom-btn-tvl").classList.add("selected");
+            document.getElementById(this.zoom + "-zoom-btn-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.add("selected");
         },
 
         redraw() {
@@ -259,7 +268,7 @@ export default {
                 }
             };
 
-            this.chart = new ApexCharts(document.querySelector("#line-chart-tvl"), options);
+            this.chart = new ApexCharts(document.querySelector("#line-chart-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')), options);
             this.chart.render();
         },
     }
@@ -299,7 +308,11 @@ export default {
 }
 
 @media only screen and (min-width: 961px) {
-    #all-zoom-btn-tvl {
+    #all-zoom-btn-tvl-usd-plus {
+        margin-right: 40px !important;
+    }
+
+    #all-zoom-btn-tvl-ets {
         margin-right: 40px !important;
     }
 
@@ -372,7 +385,12 @@ export default {
     fill: rgba(255, 255, 255, 0.6) !important;
 }
 
-#line-chart-tvl {
+#line-chart-apy-usd-plus {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+
+#line-chart-apy-ets {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
 }

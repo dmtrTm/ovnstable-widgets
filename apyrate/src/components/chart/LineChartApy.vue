@@ -3,7 +3,9 @@
         <v-row class="chart-header-row mb-0">
             <v-col cols="12">
                 <v-row class="header-text-row">
-                    <label class="chart-title">{{ avgApy ? (isMobile ? 'USD+ APY' : 'Average USD+ APY') : '' }}</label>
+                    <label class="chart-title">
+                        {{ avgApy ? (product === 'usd+' ? (isMobile ? 'USD+ APY' : 'Average USD+ APY') : (isMobile ? 'USD+/WMATIC APY' : 'ETS: USD+/WMATIC daily net APY')) : '' }}
+                    </label>
 
                     <v-spacer></v-spacer>
 
@@ -21,13 +23,13 @@
             </v-col>
         </v-row>
 
-        <div class="chart-row" id="line-chart-apy"></div>
+        <div class="chart-row" :id="'line-chart-apy-' + (product === 'usd+' ? 'usd-plus' : 'ets')"></div>
 
         <v-row class="zoom-row">
             <v-spacer></v-spacer>
             <v-btn
                     text
-                    id="week-zoom-btn-apy"
+                    :id="'week-zoom-btn-apy-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('week')"
@@ -36,7 +38,7 @@
             </v-btn>
             <v-btn
                     text
-                    id="month-zoom-btn-apy"
+                    :id="'month-zoom-btn-apy-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('month')"
@@ -45,7 +47,7 @@
             </v-btn>
             <v-btn
                     text
-                    id="all-zoom-btn-apy"
+                    :id="'all-zoom-btn-apy-' + (product === 'usd+' ? 'usd-plus' : 'ets')"
                     class="zoom-btn"
                     dark
                     @click="zoomChart('all')"
@@ -188,11 +190,11 @@ export default {
         },
 
         changeZoomBtnStyle() {
-            document.getElementById("week-zoom-btn-apy").classList.remove("selected");
-            document.getElementById("month-zoom-btn-apy").classList.remove("selected");
-            document.getElementById("all-zoom-btn-apy").classList.remove("selected");
+            document.getElementById("week-zoom-btn-apy-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
+            document.getElementById("month-zoom-btn-apy-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
+            document.getElementById("all-zoom-btn-apy-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.remove("selected");
 
-            document.getElementById(this.zoom + "-zoom-btn-apy").classList.add("selected");
+            document.getElementById(this.zoom + "-zoom-btn-apy-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.add("selected");
         },
 
         redraw() {
@@ -331,7 +333,7 @@ export default {
                 }
             };
 
-            this.chart = new ApexCharts(document.querySelector("#line-chart-apy"), options);
+            this.chart = new ApexCharts(document.querySelector("#line-chart-apy-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')), options);
             this.chart.render();
         },
     }
@@ -371,7 +373,11 @@ export default {
 }
 
 @media only screen and (min-width: 961px) {
-    #all-zoom-btn-apy {
+    #all-zoom-btn-apy-usd-plus {
+        margin-right: 40px !important;
+    }
+
+    #all-zoom-btn-apy-ets {
         margin-right: 40px !important;
     }
 
@@ -444,7 +450,12 @@ export default {
     fill: rgba(255, 255, 255, 0.6) !important;
 }
 
-#line-chart-apy {
+#line-chart-apy-usd-plus {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+
+#line-chart-apy-ets {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
 }

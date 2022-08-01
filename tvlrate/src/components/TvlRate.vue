@@ -20,14 +20,40 @@ export default {
         LineChartTvl
     },
 
-    props: {},
+    props: {
+        network: {
+            type: String,
+            default: 'polygon'
+        }
+    },
 
     data: () => ({
         payoutsTvlData: [],
         totalUsdPlusValue: null,
     }),
 
-    computed: {},
+    computed: {
+        widgetApi() {
+            if (this.network === null || this.network === 'polygon') {
+                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
+            } else if (this.network === 'avax') {
+                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
+            } else if (this.network === 'bsc') {
+                return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
+        },
+    },
+
+
+    /* eslint-disable no-unused-vars,no-undef */
+    watch: {
+        network: function (newVal, oldVal) {
+            this.getTvlRateData();
+        },
+    },
 
     created() {
         this.getTvlRateData();
@@ -66,11 +92,11 @@ export default {
         getTvlRateData() {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": process.env.VUE_APP_WIDGET_API_URL
+                    "Access-Control-Allow-Origin": this.widgetApi
                 }
             };
 
-            fetch(process.env.VUE_APP_WIDGET_API_URL + '/dapp/payouts', fetchOptions)
+            fetch(this.widgetApi + '/dapp/payouts', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     this.fillData(value);
@@ -85,6 +111,13 @@ export default {
 
 <style scoped>
 
+/* mobile */
+@media only screen and (max-width: 1400px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
 .main {
     font-style: normal;
     width: 100%;
@@ -94,7 +127,6 @@ export default {
 }
 
 .line-tvl-container {
-    width: 800px !important;
     background: #111E37 !important;
     border: 1px solid #4C586D !important;
     box-sizing: border-box;

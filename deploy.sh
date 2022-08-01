@@ -25,6 +25,15 @@ cd ..
 find apyrate/dist/js/ -type f -name '*.js' -exec sh -c 'x="{}"; mv "$x" "apyrate/dist/js/apyrate.js"' \;
 
 
+cd tvlrate || exit
+
+npm install
+npm run build
+
+cd ..
+find tvlrate/dist/js/ -type f -name '*.js' -exec sh -c 'x="{}"; mv "$x" "tvlrate/dist/js/tvlrate.js"' \;
+
+
 cd distrate || exit
 
 npm install

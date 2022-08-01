@@ -2,6 +2,7 @@ FROM nginx:stable-alpine as production-stage
 
 COPY maincards/dist/ /usr/share/nginx/html
 COPY apyrate/dist/ /usr/share/nginx/html
+COPY tvlrate/dist/ /usr/share/nginx/html
 COPY distrate/dist/ /usr/share/nginx/html
 COPY portfoliocards/dist/ /usr/share/nginx/html
 

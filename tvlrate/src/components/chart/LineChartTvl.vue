@@ -49,6 +49,7 @@
             >
                 All
             </v-btn>
+            <v-spacer v-if="isMobile"></v-spacer>
         </v-row>
     </v-container>
 </template>
@@ -90,6 +91,9 @@ export default {
     }),
 
     computed: {
+        isMobile() {
+            return window.innerWidth <= 960;
+        },
     },
 
     mounted() {
@@ -265,32 +269,83 @@ export default {
 
 <style>
 
+/* mobile */
+@media only screen and (max-width: 1400px) {
+    .chart-title {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 20px;
+        line-height: 32px;
+    }
+
+    .chart-title-tvl {
+        font-style: normal;
+        font-weight: 400 !important;
+        font-size: 30px !important;
+        line-height: 36px !important;
+    }
+
+    .chart-sub-title-tvl {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 24px;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+    .zoom-row {
+        margin-top: -35px !important;
+    }
+}
+
+@media only screen and (min-width: 961px) {
+    #all-zoom-btn-tvl {
+        margin-right: 40px !important;
+    }
+
+    .zoom-row {
+        margin-top: -50px !important;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .chart-title {
+        font-style: normal;
+        font-weight: 300 !important;
+        font-size: 24px !important;
+        line-height: 36px !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .chart-title-tvl {
+        font-style: normal;
+        font-weight: 400 !important;
+        font-size: 40px !important;
+        line-height: 44px !important;
+    }
+
+    .chart-sub-title-tvl {
+        font-style: normal;
+        font-weight: 400 !important;
+        font-size: 18px !important;
+        line-height: 28px !important;
+    }
+}
+
 .chart-title {
     font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: 300 !important;
-    font-size: 24px !important;
-    line-height: 36px !important;
-    letter-spacing: 0.04em !important;
     color: #FFFFFF !important;
 }
 
 .chart-title-tvl {
     font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: 400 !important;
-    font-size: 40px !important;
-    line-height: 44px !important;
     font-feature-settings: 'pnum' on, 'lnum' on;
     color: #FFFFFF !important;
 }
 
 .chart-sub-title-tvl {
     font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 28px !important;
     font-feature-settings: 'pnum' on, 'lnum' on;
     color: #707A8B !important;
 }
@@ -352,14 +407,6 @@ export default {
 .chart-header-row, .chart-row, .zoom-row {
     margin-left: 28px;
     margin-right: 28px;
-}
-
-#all-zoom-btn-tvl {
-    margin-right: 40px !important;
-}
-
-.zoom-row {
-    margin-top: -50px !important;
 }
 
 .header-text-row, .header-text-sub-row {

@@ -69,11 +69,6 @@ export default {
             type: String,
             default: null,
         },
-
-        network: {
-            type: String,
-            default: 'polygon'
-        }
     },
 
     components: {},

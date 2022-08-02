@@ -2,12 +2,18 @@
     <v-container class="main">
         <v-row>
             <v-col>
-                <MainCardPcv label="Total Value Locked" :value="pcv" :network="network"/>
+                <MainCardPcv info="ALL Chains" label="Total Value Locked" :value="pcv"/>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <MainCardApy label="USD+ APY based on 7-day average" :value="apyWeek"/>
+                <MainCardApy
+                        label-usd-plus="USD+ APY"
+                        :value-usd-plus="apyWeek"
+                        :network-usd-plus="bestChain"
+                        :value-ets="apyWeekEts"
+                        info="Best APY based on 7-day avg"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -17,6 +23,7 @@
 
 import MainCardPcv from "./card/MainCardPcv";
 import MainCardApy from "./card/MainCardApy";
+
 export default {
     name: 'MainCards',
 
@@ -26,37 +33,16 @@ export default {
     },
 
     props: {
-        network: {
-            type: String,
-            default: 'polygon'
-        }
     },
 
     data: () => ({
-        pcv: null,
+        pcv: 0,
         apyWeek: null,
+        apyWeekEts: null,
+        bestChain: 'polygon',
     }),
 
     computed: {
-        widgetApi() {
-            if (this.network === null || this.network === 'polygon') {
-                return process.env.VUE_APP_WIDGET_API_URL_POLYGON;
-            } else if (this.network === 'avax') {
-                return process.env.VUE_APP_WIDGET_API_URL_AVAX;
-            } else if (this.network === 'bsc') {
-                return process.env.VUE_APP_WIDGET_API_URL_BSC;
-            } else {
-                /* TODO: add widget stub */
-                return '';
-            }
-        },
-    },
-
-    /* eslint-disable no-unused-vars,no-undef */
-    watch: {
-        network: function (newVal, oldVal) {
-            this.getMainCardsData();
-        },
     },
 
     created() {
@@ -64,53 +50,119 @@ export default {
     },
 
     methods: {
-
-        fillApyData(value) {
-
-            if (value.value) {
-                this.apyWeek = this.$utils.formatMoney(value.value, 1) + '%';
-            } else {
-                this.apyWeek = '—';
-            }
-        },
-
-        fillPcvData(value) {
-
-            if (value) {
-                let sum = 0.0;
-
-                for (let i = 0; i < value.length; i++) {
-                    sum += value[i].netAssetValue;
-                }
-
-                this.pcv = '$ ' + this.$utils.formatMoneyComma(sum, 2);
-            } else {
-                this.pcv = '—';
-            }
-        },
-
-        getMainCardsData() {
+        getPcvData(widgetApiUrl) {
             let fetchOptions = {
                 headers: {
-                    "Access-Control-Allow-Origin": this.widgetApi
+                    "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
 
-            fetch(this.widgetApi + '/widget/avg-apy-info/week', fetchOptions)
+            return fetch(widgetApiUrl + '/dapp/strategies', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
-                    this.fillApyData(value);
-                }).catch(reason => {
-                console.log('Error get data: ' + reason);
-            });
+                    if (value) {
+                        let sum = 0.0;
 
-            fetch(this.widgetApi + '/dapp/strategies', fetchOptions)
+                        for (let i = 0; i < value.length; i++) {
+                            sum += value[i].netAssetValue;
+                        }
+
+                        return sum;
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
+        getApyData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
+                }
+            };
+
+            return fetch(widgetApiUrl + '/widget/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
-                    this.fillPcvData(value);
+                    if (value.value) {
+                        return value.value;
+                    } else {
+                        return 0;
+                    }
                 }).catch(reason => {
-                console.log('Error get data: ' + reason);
-            });
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
+        getEtsApyData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
+                }
+            };
+
+            return fetch(widgetApiUrl + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf/avg-apy-info/week', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    if (value.value) {
+                        return value.value;
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
+        async getMainCardsData() {
+            this.bestChain = 'polygon';
+
+            let polygonApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let avaxApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
+            let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+            let etsApy = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+
+            if (etsApy) {
+                this.apyWeekEts = this.$utils.formatMoney(etsApy, 0) + '%';
+            } else {
+                this.apyWeekEts = '—';
+            }
+
+            if (polygonApy >= avaxApy && polygonApy >= bscApy) {
+                this.bestChain = 'polygon';
+                this.apyWeek = polygonApy;
+            } else if (avaxApy >= polygonApy && avaxApy >= bscApy) {
+                this.bestChain = 'avax';
+                this.apyWeek = avaxApy;
+            } else if (bscApy >= polygonApy && bscApy >= avaxApy) {
+                this.bestChain = 'bsc';
+                this.apyWeek = bscApy;
+            } else {
+                this.bestChain = 'polygon';
+                this.apyWeek = polygonApy;
+            }
+
+            if (this.apyWeek) {
+                this.apyWeek = this.$utils.formatMoney(this.apyWeek, 0) + '%';
+            } else {
+                this.apyWeek = '—';
+            }
+
+            this.pcv = 0.0;
+
+            let polygonPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
+            let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+
+            this.pcv = polygonPcv + avaxPcv + bscPcv;
+
+            if (this.pcv) {
+                this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);
+            } else {
+                this.pcv = '—';
+            }
         },
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="main-card-container" @click="openLink('https://app.overnight.fi/fund')">
+    <div class="main-card-container">
         <div class="arrow-img">
             <svg width="226" height="221" viewBox="0 0 226 221" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M65.4999 112.5L68.6375 107.386L62.7726 103.788L60.0062 110.088L65.4999 112.5ZM147 162.5L143.862 167.614L149.731 171.215L152.495 164.908L147 162.5ZM218 0.499509L162.188 41.5481L225.643 69.3587L218 0.499509ZM11.4936 250.412L70.9936 114.912L60.0062 110.088L0.506199 245.588L11.4936 250.412ZM62.3623 117.614L143.862 167.614L150.137 157.386L68.6375 107.386L62.3623 117.614ZM152.495 164.908L201.819 52.3665L190.828 47.5495L141.504 160.092L152.495 164.908Z"
@@ -31,20 +31,43 @@
                     </linearGradient>
                 </defs>
             </svg>
-
         </div>
 
-        <v-row class="value-row">
-            <label class="value-label">
-                {{ value }}
-            </label>
+        <v-row class="info-row">
             <v-spacer></v-spacer>
+            <label class="info-label">
+                {{ info }}
+            </label>
         </v-row>
 
-        <v-row class="label-row">
-            <label class="text-label">
-                {{ label }}
-            </label>
+        <v-row class="value-row">
+            <v-col cols="5" class="value-col" @click="openBestChainLink()">
+                <label class="value-label">
+                    {{ valueUsdPlus }}
+                </label>
+                <br/><br/>
+                <label class="text-label">
+                    {{ labelUsdPlus }}
+                </label>
+                <div class="network-img-container">
+                    <img class="network-img"
+                         :src="require('../../assets/networks/' + networkUsdPlus +'.png')">
+                </div>
+            </v-col>
+            <v-divider class="apy-divider" dark vertical></v-divider>
+            <v-col class="value-col" @click="openLink('https://market.overnight.fi/ets')">
+                <label class="value-label">
+                    {{ valueEts }}
+                </label>
+                <br/><br/>
+                <label class="text-label">
+                    <abbr title="Exchange-traded strategy">ETS</abbr> APY
+                </label>
+                <div class="network-img-container">
+                    <img class="network-img"
+                         :src="require('../../assets/networks/polygon.png')">
+                </div>
+            </v-col>
         </v-row>
     </div>
 </template>
@@ -55,12 +78,32 @@ export default {
     name: "MainCardApy",
 
     props: {
-        label: {
+        labelUsdPlus: {
             type: String,
             default: null,
         },
 
-        value: {
+        valueUsdPlus: {
+            type: String,
+            default: null,
+        },
+
+        networkUsdPlus: {
+            type: String,
+            default: null,
+        },
+
+        labelEts: {
+            type: String,
+            default: null,
+        },
+
+        valueEts: {
+            type: String,
+            default: null,
+        },
+
+        info: {
             type: String,
             default: null,
         },
@@ -81,6 +124,18 @@ export default {
     methods: {
         openLink(url) {
             window.open(url, '_blank').focus();
+        },
+
+        openBestChainLink() {
+            if (this.networkUsdPlus === 'polygon') {
+                this.openLink('https://app.overnight.fi/fund')
+            } else if (this.networkUsdPlus === 'avax') {
+                this.openLink('https://avax.overnight.fi/fund')
+            } else if (this.networkUsdPlus === 'bsc') {
+                this.openLink('https://bsc.overnight.fi/fund')
+            } else {
+                this.openLink('https://app.overnight.fi/fund')
+            }
         },
     }
 }
@@ -109,13 +164,12 @@ export default {
         width: 344px !important;
     }
 
-    .value-row, .label-row {
+    .value-row {
         margin-left: 25px !important;
     }
 
     .value-row {
-        margin-top: 47px !important;
-        margin-bottom: 12px !important;
+        margin-top: 25px !important;
     }
 
     .arrow-img {
@@ -125,6 +179,28 @@ export default {
     .arrow-img-mobile {
         margin-left: 180px;
         margin-top: 19px;
+    }
+
+    .info-row {
+        margin-right: 20px !important;
+        margin-top: 20px !important;
+    }
+
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.03em;
+    }
+
+    .apy-divider {
+        height: 100px !important;
+    }
+
+    .network-img {
+        width: 20px !important;
+        height: 20px !important;
     }
 }
 
@@ -149,13 +225,12 @@ export default {
         width: 527px !important;
     }
 
-    .value-row, .label-row {
+    .value-row {
         margin-left: 44px !important;
     }
 
     .value-row {
-        margin-top: 76px !important;
-        margin-bottom: 22px !important;
+        margin-top: 44px !important;
     }
 
     .arrow-img {
@@ -165,6 +240,28 @@ export default {
 
     .arrow-img-mobile {
         display: none !important;
+    }
+
+    .info-row {
+        margin-right: 20px !important;
+        margin-top: 20px !important;
+    }
+
+    .info-label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+    }
+
+    .apy-divider {
+        height: 128px !important;
+    }
+
+    .network-img {
+        width: 24px !important;
+        height: 24px !important;
     }
 }
 
@@ -206,7 +303,24 @@ export default {
     color: white;
 }
 
-.value-label, .text-label {
+.value-label, .text-label, .info-label, .value-col, .network-img-container {
     z-index: 100 !important;
+}
+
+.network-img-container {
+    display: inline-flex !important;
+    vertical-align: sub !important;
+    margin-left: 8px !important;
+}
+
+.apy-divider {
+    margin-right: 18px !important;
+}
+
+.info-label {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    font-feature-settings: 'pnum' on, 'lnum' on;
+    color: #4C586D;
 }
 </style>

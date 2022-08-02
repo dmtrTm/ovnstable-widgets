@@ -1,6 +1,6 @@
 <template>
     <v-container class="tvl-chart-container">
-        <v-row class="chart-header-row">
+        <v-row class="chart-header-row mb-0">
             <v-col cols="12">
                 <v-row class="header-text-row">
                     <label class="chart-title">{{ totalUsdPlusValue ? (product === 'usd+' ? 'USD+ TVL' : 'USD+/WMATIC TVL') : '' }}</label>

@@ -12,7 +12,7 @@
                         :value-usd-plus="apyWeek"
                         :network-usd-plus="bestChain"
                         :value-ets="apyWeekEts"
-                        info="Best APY based on 7-day avg"
+                        info="Max 7-day APY across all chains"
                 />
             </v-col>
         </v-row>

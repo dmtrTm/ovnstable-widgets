@@ -116,6 +116,30 @@ export default {
                 });
         },
 
+        getEtsPcvData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
+                }
+            };
+
+            return fetch(widgetApiUrl + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    if (value && value.tvl) {
+                        try {
+                            return value.tvl;
+                        } catch (e) {
+                            return 0;
+                        }
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
         async getMainCardsData() {
             this.bestChain = 'polygon';
 
@@ -155,8 +179,9 @@ export default {
             let polygonPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
             let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
             let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+            let etsPcv = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
 
-            this.pcv = polygonPcv + avaxPcv + bscPcv;
+            this.pcv = polygonPcv + avaxPcv + bscPcv + etsPcv;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

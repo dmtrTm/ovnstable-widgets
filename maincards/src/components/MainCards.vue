@@ -127,11 +127,7 @@ export default {
                 .then(value => value.json())
                 .then(value => {
                     if (value && value.tvl) {
-                        try {
-                            return value.tvl;
-                        } catch (e) {
-                            return 0;
-                        }
+                        return value.tvl;
                     } else {
                         return 0;
                     }

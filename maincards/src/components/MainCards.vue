@@ -159,7 +159,7 @@ export default {
             };
 
             for(const [key, value] of Object.entries(chainDict)) {
-                if (!this.apyWeek || value > this.apyWeek) {
+                if (value < 20 && (!this.apyWeek || value > this.apyWeek)) {
                     this.apyWeek = value;
                     this.bestChain = key;
                 }

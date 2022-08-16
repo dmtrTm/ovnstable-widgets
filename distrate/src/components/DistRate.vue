@@ -38,6 +38,8 @@ export default {
                 return process.env.VUE_APP_WIDGET_API_URL_AVAX;
             } else if (this.network === 'bsc') {
                 return process.env.VUE_APP_WIDGET_API_URL_BSC;
+            } else if (this.network === 'op') {
+                return process.env.VUE_APP_WIDGET_API_URL_OP;
             } else {
                 /* TODO: add widget stub */
                 return '';

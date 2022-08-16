@@ -133,6 +133,8 @@ export default {
                 this.openLink('https://avax.overnight.fi/fund')
             } else if (this.networkUsdPlus === 'bsc') {
                 this.openLink('https://bsc.overnight.fi/fund')
+            } else if (this.networkUsdPlus === 'op') {
+                this.openLink('https://op.overnight.fi/fund')
             } else {
                 this.openLink('https://app.overnight.fi/fund')
             }

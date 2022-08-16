@@ -63,8 +63,8 @@ docker login \
 docker push  cr.yandex/crpg11k469bhc8lch9gm/overnight/widget:$tag
 
 
-if [[ "$deploySSH" == "ssh" ]];  then
-
+if [ "$deploySSH" = "ssh" ]
+then
   ssh $url docker login \
            --username oauth \
            --password $token \

@@ -17,18 +17,16 @@
             <v-spacer></v-spacer>
         </v-row>
 
-        <v-container class="stablecoin-row-list">
-            <v-col cols="12">
-                <v-row class="stablecoin-row" v-for="item in data" v-bind:key="item.label">
-                    <v-spacer></v-spacer>
+        <v-container class="stablecoin-row-list" fluid>
+            <v-row class="stablecoin-row" dense>
+                <v-col cols="6" align="center" v-for="item in data" v-bind:key="item.label">
                     <span class="img-label-col" @click="openTokenOnScan(item.link)">
                         <v-img class="currency-icon" :src="item.logo"/>
                         <label class="stablecoin-label">{{ item.label }}</label>
                         <label class="stablecoin-label-percent">{{ $utils.formatMoneyComma(getPercent(item, data), 1) }}%</label>
                     </span>
-                    <v-spacer></v-spacer>
-                </v-row>
-            </v-col>
+                </v-col>
+            </v-row>
         </v-container>
     </div>
 </template>
@@ -201,12 +199,11 @@ export default {
 }
 
 .stablecoin-row {
-    margin-bottom: 10px !important;
+    margin-bottom: 20px !important;
 }
 
 .img-label-col {
     display: -webkit-inline-box;
-    margin-right: 30px !important;
 }
 
 .stablecoin-label:hover {

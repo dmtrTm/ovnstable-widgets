@@ -17,9 +17,9 @@
             <v-spacer></v-spacer>
         </v-row>
 
-        <v-container class="stablecoin-row-list" fluid>
+        <v-container class="stablecoin-row-list">
             <v-row class="stablecoin-row" dense>
-                <v-col cols="6" align="center" v-for="item in data" v-bind:key="item.label">
+                <v-col wrap cols="6" align="start" v-for="item in data" v-bind:key="item.label">
                     <span class="img-label-col" @click="openTokenOnScan(item.link)">
                         <v-img class="currency-icon" :src="item.logo"/>
                         <label class="stablecoin-label">{{ item.label }}</label>
@@ -138,6 +138,10 @@ export default {
     .title-row {
         margin-top: 40px !important;
     }
+
+    .stablecoin-row {
+        margin-left: 25px;
+    }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -168,6 +172,10 @@ export default {
 
     .title-row {
         margin-top: 60px !important;
+    }
+
+    .stablecoin-row {
+        margin-left: 80px;
     }
 }
 
@@ -209,4 +217,5 @@ export default {
 .stablecoin-label:hover {
     text-decoration: underline !important;
 }
+
 </style>

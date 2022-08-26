@@ -55,7 +55,7 @@
                 </div>
             </v-col>
             <v-divider class="apy-divider" dark vertical></v-divider>
-            <v-col class="value-col" @click="openLink('https://market.overnight.fi/ets')">
+            <v-col class="value-col" @click="openBestChainLinkEts()">
                 <label class="value-label">
                     {{ valueEts }}
                 </label>
@@ -142,6 +142,16 @@ export default {
                 this.openLink('https://op.overnight.fi/fund')
             } else {
                 this.openLink('https://app.overnight.fi/fund')
+            }
+        },
+
+        openBestChainLinkEts() {
+            if (this.networkEts === 'polygon') {
+                this.openLink('https://market.overnight.fi/ets')
+            } else if (this.networkEts === 'bsc') {
+                this.openLink('https://bsc.overnight.fi/ets')
+            } else {
+                this.openLink('https://market.overnight.fi/ets')
             }
         },
     }

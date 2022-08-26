@@ -2,7 +2,7 @@
     <v-container class="main">
         <div class="line-tvl-container">
             <template v-if="payoutsTvlData">
-                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue" :product="product"/>
+                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue" :product="product" :network="network"/>
             </template>
         </div>
     </v-container>

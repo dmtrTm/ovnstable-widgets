@@ -3,7 +3,9 @@
         <v-row class="chart-header-row mb-0">
             <v-col cols="12">
                 <v-row class="header-text-row">
-                    <label class="chart-title">{{ totalUsdPlusValue ? (product === 'usd+' ? 'USD+ TVL' : 'USD+/WMATIC TVL') : '' }}</label>
+                    <label class="chart-title">
+                        {{ totalUsdPlusValue ? (product === 'usd+' ? 'USD+ TVL' : (isMobile ? (etsName + ' TVL') : ('ETS: ' + etsName + ' TVL'))) : '' }}
+                    </label>
                     <v-spacer></v-spacer>
                     <label class="chart-title-tvl">
                         {{ totalUsdPlusValue ? ('$' + $utils.formatMoneyComma(totalUsdPlusValue, 2)) : '' }}
@@ -78,7 +80,12 @@ export default {
         product: {
             type: String,
             default: 'usd+'
-        }
+        },
+
+        network: {
+            type: String,
+            default: 'polygon'
+        },
     },
 
     watch: {
@@ -102,6 +109,17 @@ export default {
     computed: {
         isMobile() {
             return window.innerWidth <= 960;
+        },
+
+        etsName() {
+            switch (this.network) {
+                case "polygon":
+                    return 'USD+/WMATIC';
+                case "bsc":
+                    return 'USD+/WBNB';
+                default:
+                    return '';
+            }
         },
     },
 

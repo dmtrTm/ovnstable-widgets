@@ -4,7 +4,7 @@
             <v-col cols="12">
                 <v-row class="header-text-row">
                     <label class="chart-title">
-                        {{ avgApy ? (product === 'usd+' ? (isMobile ? 'USD+ APY' : 'Average USD+ APY') : (isMobile ? 'USD+/WMATIC APY' : 'ETS: USD+/WMATIC daily net APY')) : '' }}
+                        {{ avgApy ? (product === 'usd+' ? (isMobile ? 'USD+ APY' : 'Average USD+ APY') : (isMobile ? (etsName + ' APY') : ('ETS: ' + etsName + ' daily net APY'))) : '' }}
                     </label>
 
                     <v-spacer></v-spacer>
@@ -124,6 +124,17 @@ export default {
             } else {
                 /* TODO: add widget stub */
                 return '';
+            }
+        },
+
+        etsName() {
+            switch (this.network) {
+                case "polygon":
+                    return 'USD+/WMATIC';
+                case "bsc":
+                    return 'USD+/WBNB';
+                default:
+                    return '';
             }
         },
     },

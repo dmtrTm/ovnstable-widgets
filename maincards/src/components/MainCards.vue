@@ -98,14 +98,16 @@ export default {
                 });
         },
 
-        getEtsApyData(widgetApiUrl) {
+        getEtsApyData(widgetApiUrl, chain) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
 
-            return fetch(widgetApiUrl + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf/avg-apy-info/week', fetchOptions)
+            let contractAddress = chain === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (chain === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
+
+            return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress + '/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     if (value.value) {
@@ -118,14 +120,16 @@ export default {
                 });
         },
 
-        getEtsPcvData(widgetApiUrl) {
+        getEtsPcvData(widgetApiUrl, chain) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
 
-            return fetch(widgetApiUrl + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf', fetchOptions)
+            let contractAddress = chain === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (chain === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
+
+            return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress, fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     if (value && value.tvl) {
@@ -146,8 +150,8 @@ export default {
             let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP);
 
-            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
-            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, 'polygon');
+            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, 'bsc');
 
             let etsChainDict = {
                 'polygon': etsApyPolygon,
@@ -193,8 +197,8 @@ export default {
             let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
             let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP);
-            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
-            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, 'polygon');
+            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, 'bsc');
 
             this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcvPolygon + etsPcvBsc;
 

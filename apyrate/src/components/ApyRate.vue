@@ -133,7 +133,9 @@ export default {
                     this.loading = false;
                 })
             } else if (this.product === 'ets') {
-                fetch(this.widgetApi + '/hedge-strategies/0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf', fetchOptions)
+                let contractAddress = this.network === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (this.network === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
+
+                fetch(this.widgetApi + '/hedge-strategies/' + contractAddress, fetchOptions)
                     .then(value => value.json())
                     .then(value => {
                         this.fillDataEts(value);

@@ -65,7 +65,7 @@
                 </label>
                 <div class="network-img-container">
                     <img class="network-img"
-                         :src="require('../../assets/networks/polygon.png')">
+                         :src="require('../../assets/networks/' + networkEts +'.png')">
                 </div>
             </v-col>
         </v-row>
@@ -99,6 +99,11 @@ export default {
         },
 
         valueEts: {
+            type: String,
+            default: null,
+        },
+
+        networkEts: {
             type: String,
             default: null,
         },

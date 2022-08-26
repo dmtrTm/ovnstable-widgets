@@ -12,6 +12,7 @@
                         :value-usd-plus="apyWeek"
                         :network-usd-plus="bestChain"
                         :value-ets="apyWeekEts"
+                        :network-ets="bestChainEts"
                         info="Max 7-day APY across all chains"
                 />
             </v-col>
@@ -40,6 +41,7 @@ export default {
         apyWeek: null,
         apyWeekEts: null,
         bestChain: 'polygon',
+        bestChainEts: 'polygon',
     }),
 
     computed: {
@@ -143,10 +145,24 @@ export default {
             let avaxApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
             let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP);
-            let etsApy = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
 
-            if (etsApy) {
-                this.apyWeekEts = this.$utils.formatMoney(etsApy, 0) + '%';
+            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
+
+            let etsChainDict = {
+                'polygon': etsApyPolygon,
+                'bsc': etsApyBsc,
+            };
+
+            for(const [key, value] of Object.entries(etsChainDict)) {
+                if (!this.apyWeekEts || value > this.apyWeekEts) {
+                    this.apyWeekEts = value;
+                    this.bestChainEts = key;
+                }
+            }
+
+            if (this.apyWeekEts) {
+                this.apyWeekEts = this.$utils.formatMoney(this.apyWeekEts, 0) + '%';
             } else {
                 this.apyWeekEts = '—';
             }
@@ -177,9 +193,10 @@ export default {
             let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
             let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP);
-            let etsPcv = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
+            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
 
-            this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcv;
+            this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcvPolygon + etsPcvBsc;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

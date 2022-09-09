@@ -98,14 +98,12 @@ export default {
                 });
         },
 
-        getEtsApyData(widgetApiUrl, chain) {
+        getEtsApyData(widgetApiUrl, contractAddress) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
-
-            let contractAddress = chain === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (chain === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
 
             return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress + '/avg-apy-info/week', fetchOptions)
                 .then(value => value.json())
@@ -120,14 +118,12 @@ export default {
                 });
         },
 
-        getEtsPcvData(widgetApiUrl, chain) {
+        getEtsPcvData(widgetApiUrl, contractAddress) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
                 }
             };
-
-            let contractAddress = chain === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (chain === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
 
             return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress, fetchOptions)
                 .then(value => value.json())
@@ -150,18 +146,27 @@ export default {
             let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP);
 
-            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, 'polygon');
-            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, 'bsc');
+            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf');
+            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1');
+            let etsApyBscBusd = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37');
 
             let etsChainDict = {
                 'polygon': etsApyPolygon,
                 'bsc': etsApyBsc,
+                'bscBusd': etsApyBscBusd,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {
                 if (!this.apyWeekEts || value > this.apyWeekEts) {
                     this.apyWeekEts = value;
-                    this.bestChainEts = key;
+
+                    if (key === 'polygon' || key === 'bsc') {
+                        this.bestChainEts = key;
+                    }
+
+                    if (key === 'bscBusd') {
+                        this.bestChainEts = 'bsc';
+                    }
                 }
             }
 
@@ -197,10 +202,11 @@ export default {
             let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
             let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
             let opPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP);
-            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, 'polygon');
-            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, 'bsc');
+            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf');
+            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1');
+            let etsPcvBscBusd = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37');
 
-            this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcvPolygon + etsPcvBsc;
+            this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcvPolygon + etsPcvBsc + etsPcvBscBusd;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

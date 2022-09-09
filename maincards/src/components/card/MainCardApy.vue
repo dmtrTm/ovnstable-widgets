@@ -132,27 +132,11 @@ export default {
         },
 
         openBestChainLink() {
-            if (this.networkUsdPlus === 'polygon') {
-                this.openLink('https://app.overnight.fi/fund')
-            } else if (this.networkUsdPlus === 'avax') {
-                this.openLink('https://avax.overnight.fi/fund')
-            } else if (this.networkUsdPlus === 'bsc') {
-                this.openLink('https://bsc.overnight.fi/fund')
-            } else if (this.networkUsdPlus === 'op') {
-                this.openLink('https://op.overnight.fi/fund')
-            } else {
-                this.openLink('https://app.overnight.fi/fund')
-            }
+            this.openLink('https://app.overnight.fi/stats');
         },
 
         openBestChainLinkEts() {
-            if (this.networkEts === 'polygon') {
-                this.openLink('https://market.overnight.fi/ets')
-            } else if (this.networkEts === 'bsc') {
-                this.openLink('https://bsc.overnight.fi/ets')
-            } else {
-                this.openLink('https://market.overnight.fi/ets')
-            }
+            this.openLink('https://app.overnight.fi/market');
         },
     }
 }

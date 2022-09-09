@@ -42,6 +42,22 @@ export default {
         apyWeekEts: null,
         bestChain: 'polygon',
         bestChainEts: 'polygon',
+
+        polygonApy: null,
+        avaxApy: null,
+        bscApy: null,
+        opApy: null,
+        etsApyPolygon: null,
+        etsApyBsc: null,
+        etsApyBscBusd: null,
+
+        polygonPcv: null,
+        avaxPcv: null,
+        bscPcv: null,
+        opPcv: null,
+        etsPcvPolygon: null,
+        etsPcvBsc: null,
+        etsPcvBscBusd: null,
     }),
 
     computed: {
@@ -52,7 +68,7 @@ export default {
     },
 
     methods: {
-        getPcvData(widgetApiUrl) {
+        async getPcvData(widgetApiUrl) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
@@ -78,7 +94,7 @@ export default {
                 });
         },
 
-        getApyData(widgetApiUrl) {
+        async getApyData(widgetApiUrl) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
@@ -98,7 +114,7 @@ export default {
                 });
         },
 
-        getEtsApyData(widgetApiUrl, contractAddress) {
+        async getEtsApyData(widgetApiUrl, contractAddress) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
@@ -118,7 +134,7 @@ export default {
                 });
         },
 
-        getEtsPcvData(widgetApiUrl, contractAddress) {
+        async getEtsPcvData(widgetApiUrl, contractAddress) {
             let fetchOptions = {
                 headers: {
                     "Access-Control-Allow-Origin": widgetApiUrl
@@ -138,22 +154,58 @@ export default {
                 });
         },
 
+        async updateApyData() {
+            const [polygonApy, avaxApy, bscApy, opApy, etsApyPolygon, etsApyBsc, etsApyBscBusd] = await Promise.all([
+                this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
+                this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
+                this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC),
+                this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37')
+            ]);
+
+            this.polygonApy = polygonApy;
+            this.avaxApy = avaxApy;
+            this.bscApy = bscApy;
+            this.opApy = opApy;
+
+            this.etsApyPolygon = etsApyPolygon;
+            this.etsApyBsc = etsApyBsc;
+            this.etsApyBscBusd = etsApyBscBusd;
+        },
+
+        async updatePcvData() {
+            const [polygonPcv, avaxPcv, bscPcv, opPcv, etsPcvPolygon, etsPcvBsc, etsPcvBscBusd] = await Promise.all([
+                this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
+                this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
+                this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
+                this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37')
+            ]);
+
+            this.polygonPcv = polygonPcv;
+            this.avaxPcv = avaxPcv;
+            this.bscPcv = bscPcv;
+            this.opPcv = opPcv;
+
+            this.etsPcvPolygon = etsPcvPolygon;
+            this.etsPcvBsc = etsPcvBsc;
+            this.etsPcvBscBusd = etsPcvBscBusd;
+        },
+
         async getMainCardsData() {
-            this.bestChain = 'polygon';
-
-            let polygonApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
-            let avaxApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
-            let bscApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC);
-            let opApy = await this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP);
-
-            let etsApyPolygon = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf');
-            let etsApyBsc = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1');
-            let etsApyBscBusd = await this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37');
+            await Promise.all([
+                this.updateApyData(),
+                this.updatePcvData(),
+            ]);
 
             let etsChainDict = {
-                'polygon': etsApyPolygon,
-                'bsc': etsApyBsc,
-                'bscBusd': etsApyBscBusd,
+                'polygon': this.etsApyPolygon,
+                'bsc': this.etsApyBsc,
+                'bscBusd': this.etsApyBscBusd,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {
@@ -177,11 +229,13 @@ export default {
             }
 
             let chainDict = {
-                'polygon': polygonApy,
-                'avax': avaxApy,
-                'bsc': bscApy,
-                'op': opApy,
+                'polygon': this.polygonApy,
+                'avax': this.avaxApy,
+                'bsc': this.bscApy,
+                'op': this.opApy,
             };
+
+            this.bestChain = 'polygon';
 
             for(const [key, value] of Object.entries(chainDict)) {
                 if (value < 20 && (!this.apyWeek || value > this.apyWeek)) {
@@ -197,16 +251,7 @@ export default {
             }
 
             this.pcv = 0.0;
-
-            let polygonPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON);
-            let avaxPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX);
-            let bscPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC);
-            let opPcv = await this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP);
-            let etsPcvPolygon = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf');
-            let etsPcvBsc = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1');
-            let etsPcvBscBusd = await this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37');
-
-            this.pcv = polygonPcv + avaxPcv + bscPcv + opPcv + etsPcvPolygon + etsPcvBsc + etsPcvBscBusd;
+            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBsc + this.etsPcvBscBusd;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

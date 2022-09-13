@@ -85,7 +85,7 @@ export default {
 
     methods: {
         openLink() {
-            window.open('https://app.overnight.fi/stats', '_blank').focus();
+            window.open('https://app.overnight.fi/stats?network=polygon', '_blank').focus();
         },
     }
 }

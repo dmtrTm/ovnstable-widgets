@@ -132,11 +132,11 @@ export default {
         },
 
         openBestChainLink() {
-            this.openLink('https://app.overnight.fi/stats');
+            this.openLink('https://app.overnight.fi/stats?network=' + this.networkUsdPlus);
         },
 
         openBestChainLinkEts() {
-            this.openLink('https://app.overnight.fi/market');
+            this.openLink('https://app.overnight.fi/market?network=' + this.networkEts);
         },
     }
 }

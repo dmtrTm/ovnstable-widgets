@@ -238,7 +238,7 @@ export default {
             this.bestChain = 'polygon';
 
             for(const [key, value] of Object.entries(chainDict)) {
-                if (value < 20 && (!this.apyWeek || value > this.apyWeek)) {
+                if (!this.apyWeek || value > this.apyWeek) {
                     this.apyWeek = value;
                     this.bestChain = key;
                 }

@@ -106,6 +106,12 @@ export default {
         fillDataEts(value) {
             let clientData = value.timeData;
 
+            clientData.sort(
+                function(o1,o2){
+                    return moment(o1.date).isBefore(moment(o2.date)) ? -1 : moment(o1.date).isAfter(moment(o2.date)) ? 1 : 0;
+                }
+            );
+
             let widgetDataDict = {};
             let widgetData = {
                 labels: [],

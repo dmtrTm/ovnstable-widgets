@@ -1,6 +1,6 @@
 <template>
     <div id="app-apyrate">
-        <ApyRate :network="network" :product="product"/>
+        <ApyRate :network="network" :product="product" :address="address"/>
     </div>
 </template>
 
@@ -24,6 +24,11 @@ export default {
         product: {
             type: String,
             default: 'usd+'
+        },
+
+        address: {
+            type: String,
+            default: ''
         }
     },
 

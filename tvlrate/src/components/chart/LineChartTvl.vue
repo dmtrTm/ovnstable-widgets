@@ -86,6 +86,11 @@ export default {
             type: String,
             default: 'polygon'
         },
+
+        address: {
+            type: String,
+            default: ''
+        }
     },
 
     watch: {
@@ -94,6 +99,14 @@ export default {
         },
 
         product: function (newVal, oldVal) {
+            this.redraw();
+        },
+
+        network: function (newVal, oldVal) {
+            this.redraw();
+        },
+
+        address: function (newVal, oldVal) {
             this.redraw();
         },
     },
@@ -114,9 +127,31 @@ export default {
         etsName() {
             switch (this.network) {
                 case "polygon":
-                    return 'USD+/WMATIC';
+                    if (!this.address || this.address === '') {
+                        return 'USD+/WMATIC';
+                    } else {
+                        switch (this.address) {
+                            case "0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf":
+                                return 'USD+/WMATIC';
+                            case "0xd52caB8AfC8ECd08b7CFa6D07e224a56F943e4c4":
+                                return 'WMATIC/USDC';
+                            default:
+                                return '';
+                        }
+                    }
                 case "bsc":
-                    return 'USD+/WBNB';
+                    if (!this.address || this.address === '') {
+                        return 'USD+/WBNB';
+                    } else {
+                        switch (this.address) {
+                            case "0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1":
+                                return 'USD+/WBNB';
+                            case "0xc6eca7a3b863d720393DFc62494B6eaB22567D37":
+                                return 'BUSD/WBNB';
+                            default:
+                                return '';
+                        }
+                    }
                 default:
                     return '';
             }

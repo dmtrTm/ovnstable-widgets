@@ -2,7 +2,7 @@
     <v-container class="main">
         <div class="line-tvl-container">
             <template v-if="payoutsTvlData">
-                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue" :product="product" :network="network"/>
+                <LineChartTvl :data="payoutsTvlData" :totalUsdPlusValue="totalUsdPlusValue" :product="product" :network="network" :address="address"/>
             </template>
         </div>
     </v-container>
@@ -29,6 +29,11 @@ export default {
         product: {
             type: String,
             default: 'usd+'
+        },
+
+        address: {
+            type: String,
+            default: ''
         }
     },
 
@@ -56,7 +61,15 @@ export default {
 
     /* eslint-disable no-unused-vars,no-undef */
     watch: {
+        product: function (newVal, oldVal) {
+            this.getTvlRateData();
+        },
+
         network: function (newVal, oldVal) {
+            this.getTvlRateData();
+        },
+
+        address: function (newVal, oldVal) {
             this.getTvlRateData();
         },
     },
@@ -175,7 +188,20 @@ export default {
                     console.log('Error get data: ' + reason);
                 })
             } else if (this.product === 'ets') {
-                let contractAddress = this.network === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (this.network === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
+
+                let contractAddress;
+
+                if (!this.address || this.address === '') {
+                    if (this.network === 'polygon') {
+                        contractAddress = '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf';
+                    }
+
+                    if (this.network === 'bsc') {
+                        contractAddress = '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1';
+                    }
+                } else {
+                    contractAddress = this.address;
+                }
 
                 fetch(this.widgetApi + '/hedge-strategies/' + contractAddress, fetchOptions)
                     .then(value => value.json())

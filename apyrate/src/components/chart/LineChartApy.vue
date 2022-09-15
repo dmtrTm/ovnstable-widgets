@@ -84,6 +84,11 @@ export default {
         product: {
             type: String,
             default: 'usd+'
+        },
+
+        address: {
+            type: String,
+            default: ''
         }
     },
 
@@ -92,8 +97,16 @@ export default {
             this.redraw();
         },
 
-        network: function (newVal, oldVal) {
+        product: function (newVal, oldVal) {
             this.zoomChart("week");
+        },
+
+        network: function (newVal, oldVal) {
+            this.redraw();
+        },
+
+        address: function (newVal, oldVal) {
+            this.redraw();
         },
     },
 
@@ -130,9 +143,31 @@ export default {
         etsName() {
             switch (this.network) {
                 case "polygon":
-                    return 'USD+/WMATIC';
+                    if (!this.address || this.address === '') {
+                        return 'USD+/WMATIC';
+                    } else {
+                        switch (this.address) {
+                            case "0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf":
+                                return 'USD+/WMATIC';
+                            case "0xd52caB8AfC8ECd08b7CFa6D07e224a56F943e4c4":
+                                return 'WMATIC/USDC';
+                            default:
+                                return '';
+                        }
+                    }
                 case "bsc":
-                    return 'USD+/WBNB';
+                    if (!this.address || this.address === '') {
+                        return 'USD+/WBNB';
+                    } else {
+                        switch (this.address) {
+                            case "0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1":
+                                return 'USD+/WBNB';
+                            case "0xc6eca7a3b863d720393DFc62494B6eaB22567D37":
+                                return 'BUSD/WBNB';
+                            default:
+                                return '';
+                        }
+                    }
                 default:
                     return '';
             }
@@ -167,7 +202,19 @@ export default {
                         console.log('Error get data: ' + reason);
                     })
             } else if (this.product === 'ets') {
-                let contractAddress = this.network === 'polygon' ? '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf' : (this.network === 'bsc' ? '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1' : '0');
+                let contractAddress;
+
+                if (!this.address || this.address === '') {
+                    if (this.network === 'polygon') {
+                        contractAddress = '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf';
+                    }
+
+                    if (this.network === 'bsc') {
+                        contractAddress = '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1';
+                    }
+                } else {
+                    contractAddress = this.address;
+                }
 
                 fetch(this.widgetApi + '/hedge-strategies/' + contractAddress + '/avg-apy-info/' + zoom, fetchOptions)
                     .then(value => value.json())

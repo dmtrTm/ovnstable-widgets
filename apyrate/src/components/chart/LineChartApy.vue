@@ -102,11 +102,11 @@ export default {
         },
 
         network: function (newVal, oldVal) {
-            this.redraw();
+            this.zoomChart("week");
         },
 
         address: function (newVal, oldVal) {
-            this.redraw();
+            this.zoomChart("week");
         },
     },
 

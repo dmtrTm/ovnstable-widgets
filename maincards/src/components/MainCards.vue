@@ -49,6 +49,7 @@ export default {
         opApy: null,
         etsApyPolygon: null,
         etsApyPolygonUsdc: null,
+        etsApyMoonstone: null,
         etsApyBsc: null,
         etsApyBscBusd: null,
 
@@ -58,6 +59,7 @@ export default {
         opPcv: null,
         etsPcvPolygon: null,
         etsPcvPolygonUsdc: null,
+        etsPcvMoonstone: null,
         etsPcvBsc: null,
         etsPcvBscBusd: null,
     }),
@@ -157,13 +159,14 @@ export default {
         },
 
         async updateApyData() {
-            const [polygonApy, avaxApy, bscApy, opApy, etsApyPolygon, etsApyPolygonUsdc, etsApyBsc, etsApyBscBusd] = await Promise.all([
+            const [polygonApy, avaxApy, bscApy, opApy, etsApyPolygon, etsApyPolygonUsdc, etsApyMoonstone, etsApyBsc, etsApyBscBusd] = await Promise.all([
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_OP),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xd52caB8AfC8ECd08b7CFa6D07e224a56F943e4c4'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x719ee857Ae6cf85Cbe7284Bc45ad1f99dd5ff0dB'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37')
             ]);
@@ -175,18 +178,20 @@ export default {
 
             this.etsApyPolygon = etsApyPolygon;
             this.etsApyPolygonUsdc = etsApyPolygonUsdc;
+            this.etsApyMoonstone = etsApyMoonstone;
             this.etsApyBsc = etsApyBsc;
             this.etsApyBscBusd = etsApyBscBusd;
         },
 
         async updatePcvData() {
-            const [polygonPcv, avaxPcv, bscPcv, opPcv, etsPcvPolygon, etsPcvPolygonUsdc, etsPcvBsc, etsPcvBscBusd] = await Promise.all([
+            const [polygonPcv, avaxPcv, bscPcv, opPcv, etsPcvPolygon, etsPcvPolygonUsdc, etsPcvMoonstone, etsPcvBsc, etsPcvBscBusd] = await Promise.all([
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xd52caB8AfC8ECd08b7CFa6D07e224a56F943e4c4'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x719ee857Ae6cf85Cbe7284Bc45ad1f99dd5ff0dB'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37')
             ]);
@@ -198,6 +203,7 @@ export default {
 
             this.etsPcvPolygon = etsPcvPolygon;
             this.etsPcvPolygonUsdc = etsPcvPolygonUsdc;
+            this.etsPcvMoonstone = etsPcvMoonstone;
             this.etsPcvBsc = etsPcvBsc;
             this.etsPcvBscBusd = etsPcvBscBusd;
         },
@@ -211,6 +217,7 @@ export default {
             let etsChainDict = {
                 'polygon': this.etsApyPolygon,
                 'polygonUsdc': this.etsApyPolygonUsdc,
+                'moonstone': this.etsApyMoonstone,
                 'bsc': this.etsApyBsc,
                 'bscBusd': this.etsApyBscBusd,
             };
@@ -219,7 +226,7 @@ export default {
                 if (!this.apyWeekEts || value > this.apyWeekEts) {
                     this.apyWeekEts = value;
 
-                    if (key === 'polygon' || key === 'polygonUsdc') {
+                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'moonstone') {
                         this.bestChainEts = 'polygon';
                     }
 
@@ -258,7 +265,7 @@ export default {
             }
 
             this.pcv = 0.0;
-            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvPolygonUsdc + this.etsPcvBsc + this.etsPcvBscBusd;
+            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvMoonstone + this.etsPcvPolygonUsdc + this.etsPcvBsc + this.etsPcvBscBusd;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

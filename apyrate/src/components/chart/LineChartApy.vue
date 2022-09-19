@@ -151,6 +151,8 @@ export default {
                                 return 'USD+/WMATIC';
                             case "0xd52caB8AfC8ECd08b7CFa6D07e224a56F943e4c4":
                                 return 'WMATIC/USDC';
+                            case "0x719ee857Ae6cf85Cbe7284Bc45ad1f99dd5ff0dB":
+                                return 'Moonstone';
                             default:
                                 return '';
                         }

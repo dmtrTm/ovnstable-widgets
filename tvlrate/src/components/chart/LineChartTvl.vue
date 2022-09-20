@@ -154,6 +154,17 @@ export default {
                                 return '';
                         }
                     }
+                case "op":
+                    if (!this.address || this.address === '') {
+                        return 'Ruby';
+                    } else {
+                        switch (this.address) {
+                            case "0xA88F8c02eBdE678de623C6BCFC886De82e18ad00":
+                                return 'Ruby';
+                            default:
+                                return '';
+                        }
+                    }
                 default:
                     return '';
             }

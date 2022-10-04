@@ -12,7 +12,15 @@
                     </label>
                 </v-row>
                 <v-row class="header-text-sub-row">
+                    <label class="chart-sub-title-tvl">
+                        on&nbsp;
+                    </label>
+                    <label class="chart-sub-title-tvl chain-label">
+                        {{ getChainName(network) }}
+                    </label>
+
                     <v-spacer></v-spacer>
+
                     <label class="chart-sub-title-tvl">
                         {{ totalUsdPlusValue ? 'past 2 hours' : '' }}
                     </label>
@@ -124,6 +132,21 @@ export default {
             return window.innerWidth <= 960;
         },
 
+        chainColor() {
+            if (this.network === null || this.network === 'polygon') {
+                return '#7B3FE4';
+            } else if (this.network === 'avax') {
+                return '#E84142';
+            } else if (this.network === 'bsc') {
+                return '#F0B90B';
+            } else if (this.network === 'op') {
+                return '#FF0420';
+            } else {
+                /* TODO: add widget stub */
+                return '';
+            }
+        },
+
         etsName() {
             switch (this.network) {
                 case "polygon":
@@ -182,6 +205,17 @@ export default {
     methods: {
         ...mapMutations([]),
 
+        getChainName(s) {
+            switch (s) {
+                case 'op':
+                    return 'optimism'
+                case 'avax':
+                    return 'avalanche (alpha)'
+                default:
+                    return s
+            }
+        },
+
         zoomChart(zoom) {
             this.zoom = zoom;
 
@@ -214,6 +248,18 @@ export default {
             document.getElementById(this.zoom + "-zoom-btn-tvl-" + (this.product === 'usd+' ? 'usd-plus' : 'ets')).classList.add("selected");
         },
 
+        hexToRGB(hex, alpha) {
+            let r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+
+            if (alpha) {
+                return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+            } else {
+                return "rgb(" + r + ", " + g + ", " + b + ")";
+            }
+        },
+
         redraw() {
             if (this.chart) {
                 this.chart.destroy();
@@ -240,6 +286,7 @@ export default {
             let options = {
                 series: [{
                     name: "TVL",
+                    color: this.hexToRGB(this.chainColor, 0.1),
                     data: values
                 }],
 
@@ -257,11 +304,15 @@ export default {
                         enabled: false
                     },
 
-                    background: '#111E37',
+                    background: '#FFFFFF',
 
                     toolbar: {
                         show: false
                     }
+                },
+
+                tooltip: {
+                    enabled: true,
                 },
 
                 grid: {
@@ -275,7 +326,7 @@ export default {
                 stroke: {
                     curve: 'straight',
                     width: this.isMobile ? 1 : 2,
-                    colors: ["#3D8DFF"],
+                    colors: [this.chainColor],
                 },
 
                 xaxis: {
@@ -314,18 +365,18 @@ export default {
                 },
 
                 theme: {
-                    mode: 'dark',
+                    mode: 'light',
                 },
 
                 fill: {
-                    colors: ['rgba(61, 141, 255, 0.4)'],
+                    colors: [this.hexToRGB(this.chainColor, 0.1)],
                     opacity: 1,
                     type: 'gradient',
                     gradient: {
-                        shade: 'dark',
+                        shade: 'light',
                         type: "vertical",
                         shadeIntensity: 1,
-                        gradientToColors: ['rgba(17, 30, 55, 0.6)'],
+                        gradientToColors: ['#FFFFFF'],
                         opacityFrom: 1,
                         opacityTo: 1,
                         stops: [0, 100],
@@ -347,9 +398,9 @@ export default {
 @media only screen and (max-width: 1400px) {
     .chart-title {
         font-style: normal;
-        font-weight: 300;
-        font-size: 20px;
-        line-height: 32px;
+        font-weight: 400 !important;
+        font-size: 20px !important;
+        line-height: 32px !important;
     }
 
     .chart-title-tvl {
@@ -362,8 +413,8 @@ export default {
     .chart-sub-title-tvl {
         font-style: normal;
         font-weight: 300;
-        font-size: 16px;
-        line-height: 24px;
+        font-size: 14px;
+        line-height: 22px;
     }
 }
 
@@ -390,10 +441,9 @@ export default {
 @media only screen and (min-width: 1400px) {
     .chart-title {
         font-style: normal;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
         font-size: 24px !important;
         line-height: 36px !important;
-        letter-spacing: 0.04em !important;
     }
 
     .chart-title-tvl {
@@ -406,20 +456,20 @@ export default {
     .chart-sub-title-tvl {
         font-style: normal;
         font-weight: 400 !important;
-        font-size: 18px !important;
-        line-height: 28px !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
     }
 }
 
 .chart-title {
     font-family: 'Roboto', sans-serif;
-    color: #FFFFFF !important;
+    color: #29323E !important;
 }
 
 .chart-title-tvl {
     font-family: 'Roboto', sans-serif;
     font-feature-settings: 'pnum' on, 'lnum' on;
-    color: #FFFFFF !important;
+    color: #29323E !important;
 }
 
 .chart-sub-title-tvl {
@@ -498,11 +548,15 @@ export default {
 }
 
 .header-text-sub-row {
-    padding-top: 8px !important;
+    padding-top: 4px !important;
 }
 
 .header-text-row {
     margin-top: 28px !important;
+}
+
+.chain-label {
+    text-transform: capitalize !important;
 }
 
 </style>

@@ -202,8 +202,9 @@ export default {
 }
 
 .line-apy-container {
-    background: #111E37 !important;
-    border: 1px solid #4C586D !important;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(32, 81, 155, 0.12);
+    border-radius: 12px;
     box-sizing: border-box;
 }
 

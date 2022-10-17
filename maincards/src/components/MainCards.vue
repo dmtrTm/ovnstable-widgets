@@ -153,7 +153,17 @@ export default {
                 .then(value => value.json())
                 .then(value => {
                     if (value && value.tvl) {
-                        return value.tvl;
+                        let result = 0;
+
+                        if (value.tvl < 0.0001) {
+                            if (value.timeData && value.timeData.length > 0) {
+                                result = value.timeData[value.timeData.length - 1].tvl;
+                            }
+                        } else {
+                            result = value.tvl;
+                        }
+
+                        return result;
                     } else {
                         return 0;
                     }

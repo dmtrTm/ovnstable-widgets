@@ -54,6 +54,8 @@ export default {
         etsApyBscBusd: null,
         etsApyRuby: null,
         etsApyGarnet: null,
+        etsApyWmaticUsdcUniV3: null,
+        etsApyWethUsdcUniV3: null,
 
         polygonPcv: null,
         avaxPcv: null,
@@ -66,6 +68,8 @@ export default {
         etsPcvBscBusd: null,
         etsPcvRuby: null,
         etsPcvGarnet: null,
+        etsPcvWmaticUsdcUniV3: null,
+        etsPcvWethUsdcUniV3: null,
     }),
 
     computed: {
@@ -173,7 +177,7 @@ export default {
         },
 
         async updateApyData() {
-            const [polygonApy, avaxApy, bscApy, opApy, etsApyPolygon, etsApyPolygonUsdc, etsApyMoonstone, etsApyBsc, etsApyBscBusd, etsApyRuby, etsApyGarnet] = await Promise.all([
+            const [polygonApy, avaxApy, bscApy, opApy, etsApyPolygon, etsApyPolygonUsdc, etsApyMoonstone, etsApyBsc, etsApyBscBusd, etsApyRuby, etsApyGarnet, etsApyWmaticUsdcUniV3, etsApyWethUsdcUniV3] = await Promise.all([
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC),
@@ -184,7 +188,9 @@ export default {
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_OP, '0xA88F8c02eBdE678de623C6BCFC886De82e18ad00'),
-                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_OP, '0x270dF474f4bd2B92A45A46228683c971765E81A7')
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_OP, '0x270dF474f4bd2B92A45A46228683c971765E81A7'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xF14D4750A638677E1f127ff5317fe5fA2f13b5A0'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x3F413115Cd413BE1dCA955017aBDcfAB7E26ce10')
             ]);
 
             this.polygonApy = polygonApy;
@@ -199,10 +205,12 @@ export default {
             this.etsApyBscBusd = etsApyBscBusd;
             this.etsApyRuby = etsApyRuby;
             this.etsApyGarnet = etsApyGarnet;
+            this.etsApyWmaticUsdcUniV3 = etsApyWmaticUsdcUniV3;
+            this.etsApyWethUsdcUniV3 = etsApyWethUsdcUniV3;
         },
 
         async updatePcvData() {
-            const [polygonPcv, avaxPcv, bscPcv, opPcv, etsPcvPolygon, etsPcvPolygonUsdc, etsPcvMoonstone, etsPcvBsc, etsPcvBscBusd, etsPcvRuby, etsPcvGarnet] = await Promise.all([
+            const [polygonPcv, avaxPcv, bscPcv, opPcv, etsPcvPolygon, etsPcvPolygonUsdc, etsPcvMoonstone, etsPcvBsc, etsPcvBscBusd, etsPcvRuby, etsPcvGarnet, etsPcvWmaticUsdcUniV3, etsPcvWethUsdcUniV3] = await Promise.all([
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
@@ -213,7 +221,9 @@ export default {
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xbAAc6ED05b2fEb47ef04b63018A27d80cbeA10d1'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_OP, '0xA88F8c02eBdE678de623C6BCFC886De82e18ad00'),
-                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_OP, '0x270dF474f4bd2B92A45A46228683c971765E81A7')
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_OP, '0x270dF474f4bd2B92A45A46228683c971765E81A7'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xF14D4750A638677E1f127ff5317fe5fA2f13b5A0'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x3F413115Cd413BE1dCA955017aBDcfAB7E26ce10')
             ]);
 
             this.polygonPcv = polygonPcv;
@@ -228,6 +238,8 @@ export default {
             this.etsPcvBscBusd = etsPcvBscBusd;
             this.etsPcvRuby = etsPcvRuby;
             this.etsPcvGarnet = etsPcvGarnet;
+            this.etsPcvWmaticUsdcUniV3 = etsPcvWmaticUsdcUniV3;
+            this.etsPcvWethUsdcUniV3 = etsPcvWethUsdcUniV3;
         },
 
         async getMainCardsData() {
@@ -244,13 +256,15 @@ export default {
                 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
                 'garnet': this.etsApyGarnet,
+                'wmaticUsdcUniV3': this.etsApyWmaticUsdcUniV3,
+                'wethUsdcUniV3': this.etsApyWethUsdcUniV3,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {
                 if (!this.apyWeekEts || value > this.apyWeekEts) {
                     this.apyWeekEts = value;
 
-                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'moonstone') {
+                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'moonstone' || key === 'wmaticUsdcUniV3' || key === 'wethUsdcUniV3') {
                         this.bestChainEts = 'polygon';
                     }
 
@@ -293,7 +307,7 @@ export default {
             }
 
             this.pcv = 0.0;
-            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvMoonstone + this.etsPcvPolygonUsdc + this.etsPcvBsc + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvGarnet;
+            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvMoonstone + this.etsPcvPolygonUsdc + this.etsPcvBsc + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvGarnet + this.etsPcvWmaticUsdcUniV3 + this.etsPcvWethUsdcUniV3;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

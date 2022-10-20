@@ -251,13 +251,13 @@ export default {
             let etsChainDict = {
                 'polygon': this.etsApyPolygon,
                 'polygonUsdc': this.etsApyPolygonUsdc,
-                'moonstone': this.etsApyMoonstone,
+                // 'moonstone': this.etsApyMoonstone,
                 'bsc': this.etsApyBsc,
                 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
                 'garnet': this.etsApyGarnet,
-                'wmaticUsdcUniV3': this.etsApyWmaticUsdcUniV3,
-                'wethUsdcUniV3': this.etsApyWethUsdcUniV3,
+                // 'wmaticUsdcUniV3': this.etsApyWmaticUsdcUniV3,
+                // 'wethUsdcUniV3': this.etsApyWethUsdcUniV3,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {

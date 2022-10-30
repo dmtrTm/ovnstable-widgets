@@ -71,7 +71,7 @@ then
           cr.yandex
 
   ssh $url docker pull cr.yandex/crpg11k469bhc8lch9gm/overnight/widget:$tag
-  ssh $url docker-compose -f /root/docker-compose.yaml up -d --no-deps widget
+  ssh $url docker-compose -f /home/ubuntu/docker-compose.yaml up -d --no-deps widget
   ssh $url docker logs widget -f
 fi
 

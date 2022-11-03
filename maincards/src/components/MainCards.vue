@@ -234,7 +234,7 @@ export default {
             let etsChainDict = {
                 'polygon': this.etsApyPolygon,
                 // 'polygonUsdc': this.etsApyPolygonUsdc,
-                // 'bscBusd': this.etsApyBscBusd,
+                'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
                 // 'garnet': this.etsApyGarnet,
                 'nightOvAr': this.etsApyNightOvAr,

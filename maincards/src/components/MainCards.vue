@@ -232,7 +232,7 @@ export default {
             ]);
 
             let etsChainDict = {
-                'polygon': this.etsApyPolygon,
+                // 'polygon': this.etsApyPolygon,
                 // 'polygonUsdc': this.etsApyPolygonUsdc,
                 // 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,

@@ -13,7 +13,7 @@
                         :network-usd-plus="bestChain"
                         :value-ets="apyWeekEts"
                         :network-ets="bestChainEts"
-                        info="Max 7-day APY across all chains"
+                        info="Max 30-day APY across all chains"
                 />
             </v-col>
         </v-row>
@@ -111,7 +111,7 @@ export default {
                 }
             };
 
-            return fetch(widgetApiUrl + '/widget/avg-apy-info/week', fetchOptions)
+            return fetch(widgetApiUrl + '/widget/avg-apy-info/month', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     if (value.value) {
@@ -131,7 +131,7 @@ export default {
                 }
             };
 
-            return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress + '/avg-apy-info/week', fetchOptions)
+            return fetch(widgetApiUrl + '/hedge-strategies/' + contractAddress + '/avg-apy-info/month', fetchOptions)
                 .then(value => value.json())
                 .then(value => {
                     if (value.value) {

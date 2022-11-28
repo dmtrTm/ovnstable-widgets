@@ -103,6 +103,11 @@ export default {
             default: null,
         },
 
+        etsName: {
+            type: String,
+            default: null,
+        },
+
         networkEts: {
             type: String,
             default: null,
@@ -136,7 +141,7 @@ export default {
         },
 
         openBestChainLinkEts() {
-            this.openLink('https://app.overnight.fi/market?network=' + this.networkEts);
+            this.openLink(`https://app.overnight.fi/ets/${this.etsName}`);
         },
     }
 }

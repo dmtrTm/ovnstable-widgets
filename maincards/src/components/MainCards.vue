@@ -12,6 +12,7 @@
                         :value-usd-plus="apyWeek"
                         :network-usd-plus="bestChain"
                         :value-ets="apyWeekEts"
+                        :ets-name="bestEtsName"
                         :network-ets="bestChainEts"
                         info="Max 30-day APY across all chains"
                 />
@@ -40,6 +41,7 @@ export default {
         pcv: 0,
         apyWeek: null,
         apyWeekEts: null,
+        bestEtsName: null,
         bestChain: 'polygon',
         bestChainEts: 'polygon',
 
@@ -226,7 +228,7 @@ export default {
                 // 'polygon': this.etsApyPolygon,
                 // 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
-                'nightOvAr': this.etsApyNightOvAr,
+                'night_ov_ar': this.etsApyNightOvAr,
                 'alpha': this.etsApyAlpha,
                 'beta': this.etsApyBeta,
                 'gamma': this.etsApyGamma,
@@ -236,6 +238,7 @@ export default {
             for(const [key, value] of Object.entries(etsChainDict)) {
                 if (!this.apyWeekEts || value > this.apyWeekEts) {
                     this.apyWeekEts = value;
+                    this.bestEtsName = key;
 
                     if (key === 'polygon' || key === 'polygonUsdc' || key === 'alpha' || key === 'beta' || key === 'delta' || key === 'gamma') {
                         this.bestChainEts = 'polygon';
@@ -245,7 +248,7 @@ export default {
                         this.bestChainEts = 'bsc';
                     }
 
-                    if (key === 'ruby' || key === 'garnet' || key === 'nightOvAr') {
+                    if (key === 'ruby' || key === 'garnet' || key === 'night_ov_ar') {
                         this.bestChainEts = 'op';
                     }
                 }

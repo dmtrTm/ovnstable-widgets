@@ -201,6 +201,7 @@ export default {
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_OP),
+
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4b5e0af6AE8Ef52c304CD55f546342ca0d3050bf'),
 
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC, '0xc6eca7a3b863d720393DFc62494B6eaB22567D37'),
@@ -226,7 +227,9 @@ export default {
                 // 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
                 'nightOvAr': this.etsApyNightOvAr,
+                'alpha': this.etsApyAlpha,
                 'beta': this.etsApyBeta,
+                'gamma': this.etsApyGamma,
                 'delta': this.etsApyDelta,
             };
 
@@ -234,7 +237,7 @@ export default {
                 if (!this.apyWeekEts || value > this.apyWeekEts) {
                     this.apyWeekEts = value;
 
-                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'beta' || key === 'delta') {
+                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'alpha' || key === 'beta' || key === 'delta' || key === 'gamma') {
                         this.bestChainEts = 'polygon';
                     }
 
@@ -257,8 +260,8 @@ export default {
             let chainDict = {
                 'polygon': this.polygonApy,
                 'avax': this.avaxApy,
-                // 'bsc': this.bscApy,
                 'op': this.opApy,
+                // 'bsc': this.bscApy,
             };
 
             this.bestChain = 'polygon';

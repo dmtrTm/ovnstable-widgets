@@ -271,12 +271,12 @@ export default {
                 // 'bscBusd': this.etsApyBscBusd,
                 'ruby': this.etsApyRuby,
                 'night_ov_ar': this.etsApyNightOvAr,
-                'alpha': this.etsApyAlpha,
-                'beta': this.etsApyBeta,
-                'gamma': this.etsApyGamma,
-                'delta': this.etsApyDelta,
-                'epsilon': this.etsApyEpsilon,
-                'zeta': this.etsApyZeta,
+                'qs_alpha_wmatic_usdc': this.etsApyAlpha,
+                'qs_beta_wmatic_usdc': this.etsApyBeta,
+                'qs_gamma_weth_usdc': this.etsApyGamma,
+                'qs_delta_weth_usdc': this.etsApyDelta,
+                'qs_epsilon_weth_dai': this.etsApyEpsilon,
+                'qs_zeta_wbtc_usdc': this.etsApyZeta,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {
@@ -284,7 +284,7 @@ export default {
                     this.apyWeekEts = value;
                     this.bestEtsName = key;
 
-                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'alpha' || key === 'beta' || key === 'delta' || key === 'gamma' || key === 'epsilon' || key === 'zeta') {
+                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'qs_alpha_wmatic_usdc' || key === 'qs_beta_wmatic_usdc' || key === 'qs_delta_weth_usdc' || key === 'qs_gamma_weth_usdc' || key === 'qs_epsilon_weth_dai' || key === 'qs_zeta_wbtc_usdc') {
                         this.bestChainEts = 'polygon';
                     }
 

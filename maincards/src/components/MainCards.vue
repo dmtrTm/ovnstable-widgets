@@ -70,6 +70,7 @@ export default {
         etsPcvBeta: null,
         etsPcvGamma: null,
         etsPcvDelta: null,
+        polygonInsurancePcv: null,
     }),
 
     computed: {
@@ -176,6 +177,36 @@ export default {
                 });
         },
 
+        async getInsurancePcvData(widgetApiUrl) {
+            let fetchOptions = {
+                headers: {
+                    "Access-Control-Allow-Origin": widgetApiUrl
+                }
+            };
+
+            return fetch(widgetApiUrl + '/insurance/', fetchOptions)
+                .then(value => value.json())
+                .then(value => {
+                    if (value && value.lastTvl) {
+                        let result = 0;
+
+                        if (value.lastTvl < 0.0001) {
+                            if (value.payouts && value.payouts.length > 0) {
+                                result = value.payouts[value.payouts.length - 1].tvl;
+                            }
+                        } else {
+                            result = value.lastTvl;
+                        }
+
+                        return result;
+                    } else {
+                        return 0;
+                    }
+                }).catch(reason => {
+                    console.log('Error get data: ' + reason);
+                });
+        },
+
         async updateApyData() {
             [this.polygonApy, this.avaxApy, this.bscApy, this.opApy, this.etsApyPolygon, this.etsApyBscBusd, this.etsApyRuby, this.etsApyNightOvAr, this.etsApyAlpha, this.etsApyBeta, this.etsApyGamma, this.etsApyDelta] = await Promise.all([
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
@@ -198,7 +229,7 @@ export default {
         },
 
         async updatePcvData() {
-            [this.polygonPcv, this.avaxPcv, this.bscPcv, this.opPcv, this.etsPcvPolygon, this.etsPcvBscBusd, this.etsPcvRuby, this.etsPcvNightOvAr, this.etsPcvAlpha, this.etsPcvBeta, this.etsPcvGamma, this.etsPcvDelta] = await Promise.all([
+            [this.polygonPcv, this.avaxPcv, this.bscPcv, this.opPcv, this.etsPcvPolygon, this.etsPcvBscBusd, this.etsPcvRuby, this.etsPcvNightOvAr, this.etsPcvAlpha, this.etsPcvBeta, this.etsPcvGamma, this.etsPcvDelta, this.polygonInsurancePcv] = await Promise.all([
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
@@ -215,6 +246,8 @@ export default {
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x025656862635b670FC62e4BaD9D20744258dbb02'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xdD7e3823d9178CEFBB486b1c56Fd31EE7DcfF323'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4279474D4643269613ff1832ff9aD88077b4E67F'),
+
+                this.getInsurancePcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
             ]);
         },
 
@@ -262,7 +295,7 @@ export default {
 
             let chainDict = {
                 'polygon': this.polygonApy,
-                'avax': this.avaxApy,
+                // 'avax': this.avaxApy,
                 'op': this.opApy,
                 // 'bsc': this.bscApy,
             };
@@ -283,7 +316,7 @@ export default {
             }
 
             this.pcv = 0.0;
-            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta;
+            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta + this.polygonInsurancePcv;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

@@ -57,6 +57,8 @@ export default {
         etsApyBeta: null,
         etsApyGamma: null,
         etsApyDelta: null,
+        etsApyEpsilon: null,
+        etsApyZeta: null,
 
         polygonPcv: null,
         avaxPcv: null,
@@ -70,6 +72,9 @@ export default {
         etsPcvBeta: null,
         etsPcvGamma: null,
         etsPcvDelta: null,
+        etsPcvEpsilon: null,
+        etsPcvZeta: null,
+
         polygonInsurancePcv: null,
     }),
 
@@ -208,7 +213,7 @@ export default {
         },
 
         async updateApyData() {
-            [this.polygonApy, this.avaxApy, this.bscApy, this.opApy, this.etsApyPolygon, this.etsApyBscBusd, this.etsApyRuby, this.etsApyNightOvAr, this.etsApyAlpha, this.etsApyBeta, this.etsApyGamma, this.etsApyDelta] = await Promise.all([
+            [this.polygonApy, this.avaxApy, this.bscApy, this.opApy, this.etsApyPolygon, this.etsApyBscBusd, this.etsApyRuby, this.etsApyNightOvAr, this.etsApyAlpha, this.etsApyBeta, this.etsApyGamma, this.etsApyDelta, this.etsApyEpsilon, this.etsApyZeta] = await Promise.all([
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getApyData(process.env.VUE_APP_WIDGET_API_URL_BSC),
@@ -225,11 +230,13 @@ export default {
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x025656862635b670FC62e4BaD9D20744258dbb02'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xdD7e3823d9178CEFBB486b1c56Fd31EE7DcfF323'),
                 this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4279474D4643269613ff1832ff9aD88077b4E67F'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xB53Ecca6CB52279e80D8d05a0BC741aDf50bfce4'),
+                this.getEtsApyData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x0Eec93122d95198baeC9EF16f1BE4f567ea2a750'),
             ]);
         },
 
         async updatePcvData() {
-            [this.polygonPcv, this.avaxPcv, this.bscPcv, this.opPcv, this.etsPcvPolygon, this.etsPcvBscBusd, this.etsPcvRuby, this.etsPcvNightOvAr, this.etsPcvAlpha, this.etsPcvBeta, this.etsPcvGamma, this.etsPcvDelta, this.polygonInsurancePcv] = await Promise.all([
+            [this.polygonPcv, this.avaxPcv, this.bscPcv, this.opPcv, this.etsPcvPolygon, this.etsPcvBscBusd, this.etsPcvRuby, this.etsPcvNightOvAr, this.etsPcvAlpha, this.etsPcvBeta, this.etsPcvGamma, this.etsPcvDelta, this.etsPcvEpsilon, this.etsPcvZeta, this.polygonInsurancePcv] = await Promise.all([
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_AVAX),
                 this.getPcvData(process.env.VUE_APP_WIDGET_API_URL_BSC),
@@ -246,6 +253,8 @@ export default {
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x025656862635b670FC62e4BaD9D20744258dbb02'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xdD7e3823d9178CEFBB486b1c56Fd31EE7DcfF323'),
                 this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x4279474D4643269613ff1832ff9aD88077b4E67F'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0xB53Ecca6CB52279e80D8d05a0BC741aDf50bfce4'),
+                this.getEtsPcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON, '0x0Eec93122d95198baeC9EF16f1BE4f567ea2a750'),
 
                 this.getInsurancePcvData(process.env.VUE_APP_WIDGET_API_URL_POLYGON),
             ]);
@@ -266,6 +275,8 @@ export default {
                 'beta': this.etsApyBeta,
                 'gamma': this.etsApyGamma,
                 'delta': this.etsApyDelta,
+                'epsilon': this.etsApyEpsilon,
+                'zeta': this.etsApyZeta,
             };
 
             for(const [key, value] of Object.entries(etsChainDict)) {
@@ -273,7 +284,7 @@ export default {
                     this.apyWeekEts = value;
                     this.bestEtsName = key;
 
-                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'alpha' || key === 'beta' || key === 'delta' || key === 'gamma') {
+                    if (key === 'polygon' || key === 'polygonUsdc' || key === 'alpha' || key === 'beta' || key === 'delta' || key === 'gamma' || key === 'epsilon' || key === 'zeta') {
                         this.bestChainEts = 'polygon';
                     }
 
@@ -316,7 +327,7 @@ export default {
             }
 
             this.pcv = 0.0;
-            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta + this.polygonInsurancePcv;
+            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta + this.etsPcvEpsilon + this.etsPcvZeta + this.polygonInsurancePcv;
 
             if (this.pcv) {
                 this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);

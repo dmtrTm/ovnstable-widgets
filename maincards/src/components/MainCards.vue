@@ -2,7 +2,7 @@
     <v-container class="main">
         <v-row>
             <v-col>
-                <MainCardPcv info="ALL Chains" label="Total Value Locked" :value="pcv.toString()"/>
+                <MainCardPcv info="ALL Chains" :chainsStatistic="chainsStatistic"/>
             </v-col>
         </v-row>
         <v-row>
@@ -38,7 +38,10 @@ export default {
     },
 
     data: () => ({
-        pcv: 0,
+        chainsStatistic: {
+            tvl: {value: 0.0, label: 'Total Value Locked'},
+            insuranceFund: {value: 0.0, label: 'Insurance Fund'},
+        },
         apyWeek: null,
         apyWeekEts: null,
         bestEtsName: null,
@@ -318,11 +321,7 @@ export default {
                 }
             }
 
-            if (this.apyWeekEts) {
-                this.apyWeekEts = this.$utils.formatMoney(this.apyWeekEts, 0) + '%';
-            } else {
-                this.apyWeekEts = '—';
-            }
+            this.apyWeekEts = this.apyWeekEts ? (this.$utils.formatMoney(this.apyWeekEts, 0) + '%') : '-';
 
             let chainDict = {
                 'polygon': this.polygonApy,
@@ -340,20 +339,20 @@ export default {
                 }
             }
 
-            if (this.apyWeek) {
-                this.apyWeek = this.$utils.formatMoney(this.apyWeek, 0) + '%';
-            } else {
-                this.apyWeek = '—';
-            }
+            this.apyWeek = this.apyWeek ? (this.$utils.formatMoney(this.apyWeek, 0) + '%') : '—';
 
-            this.pcv = 0.0;
-            this.pcv = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta + this.etsPcvEpsilon + this.etsPcvZeta + this.polygonInsurancePcv + this.etsPcvEta + this.etsPcvUniAlpha + this.etsPcvUniBeta;
-
-            if (this.pcv) {
-                this.pcv = '$ ' + this.$utils.formatMoneyComma(this.pcv, 3);
-            } else {
-                this.pcv = '—';
-            }
+            // chains statistic
+            this.chainsStatistic.tvl.value = this.getTvl();
+            this.chainsStatistic.insuranceFund.value = this.getInsuranceFund();
+        },
+        getTvl() {
+             let tvl = 0.0;
+            tvl = this.polygonPcv + this.avaxPcv + this.bscPcv + this.opPcv + this.etsPcvPolygon + this.etsPcvBscBusd + this.etsPcvRuby + this.etsPcvNightOvAr + this.etsPcvAlpha + this.etsPcvBeta + this.etsPcvGamma + this.etsPcvDelta + this.etsPcvEpsilon + this.etsPcvZeta + this.polygonInsurancePcv + this.etsPcvEta + this.etsPcvUniAlpha + this.etsPcvUniBeta;
+            return tvl ? ('$ ' + this.$utils.formatMoneyComma(tvl, 2)) : '-'
+        },
+        getInsuranceFund() {
+            let insuranceFund = 100000; // mock data todo: update
+            return insuranceFund ? ('$ ' + this.$utils.formatMoneyComma(insuranceFund, 2)) : '—'
         },
     }
 }

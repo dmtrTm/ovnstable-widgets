@@ -1,51 +1,54 @@
 <template>
     <div class="main-card-container" @click="openLink()">
         <div class="shield-img">
-            <svg width="198" height="234" viewBox="0 0 198 234" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M111.789 256C111.789 256 6 229.604 6 45.8492C41.2629 42.9955 75.8125 39.0208 111.789 6C147.765 38.9189 182.315 42.9955 217.578 45.8492C217.68 229.604 111.789 256 111.789 256Z"
-                      stroke="url(#paint0_linear_193_7303)" stroke-width="12" stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"/>
-                <defs>
-                    <linearGradient id="paint0_linear_193_7303" x1="6" y1="6" x2="287.564" y2="155.492"
-                                    gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#052758"/>
-                        <stop offset="1" stop-color="#181720"/>
-                    </linearGradient>
-                </defs>
-            </svg>
+        <svg width="161" height="152" viewBox="0 0 161 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M80.2298 146C80.2298 146 6 131.218 6 28.3155C30.7433 26.7175 54.9859 24.4916 80.2298 6C105.474 24.4346 129.716 26.7175 154.46 28.3155C154.531 131.218 80.2298 146 80.2298 146Z" stroke="url(#paint0_linear_7150_115531)" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+                <linearGradient id="paint0_linear_7150_115531" x1="-15.752" y1="13.56" x2="156.292" y2="96.394" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#052E68"/>
+                    <stop offset="1" stop-color="#071025"/>
+                </linearGradient>
+            </defs>
+        </svg>
         </div>
 
         <div class="shield-img-mobile">
-            <svg width="95" height="156" viewBox="0 0 95 156" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M75.2796 169.507C75.2796 169.507 6.22583 152.277 6.22583 32.3304C29.2438 30.4677 51.796 27.8732 75.2796 6.31885C98.7633 27.8067 121.315 30.4677 144.333 32.3304C144.4 152.277 75.2796 169.507 75.2796 169.507Z" stroke="url(#paint0_linear_753_145324)" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="119" height="112" viewBox="0 0 119 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M59.0213 106C59.0213 106 6 95.4415 6 21.9397C23.6738 20.7982 40.9899 19.2083 59.0213 6C77.0526 19.1675 94.3688 20.7982 112.043 21.9397C112.094 95.4415 59.0213 106 59.0213 106Z" stroke="url(#paint0_linear_7199_115626)" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                 <defs>
-                    <linearGradient id="paint0_linear_753_145324" x1="-14.0095" y1="15.131" x2="127.286" y2="58.7823" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#052758"/>
+                    <linearGradient id="paint0_linear_7199_115626" x1="-9.53717" y1="11.4" x2="113.351" y2="70.5671" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#052E68"/>
                         <stop offset="1" stop-color="#071025"/>
                     </linearGradient>
                 </defs>
             </svg>
         </div>
 
-        <v-row class="info-row">
-            <v-spacer></v-spacer>
-            <label class="info-label">
-                {{ info }}
-            </label>
-        </v-row>
+        <div class="info-container">
+            <div class="info-label-container">
+                <label class="info-label">
+                    {{ info }}
+                </label>
+            </div>
 
-        <v-row class="value-row">
-            <label class="value-label">
-                {{ value }}
-            </label>
-        </v-row>
+            <div class="tvl-container">
+                <div class="value-label tvl-value">
+                    {{ chainsStatistic.tvl.value }}
+                </div>
 
-        <v-row class="label-row">
-            <label class="text-label">
-                {{ label }}
-            </label>
-        </v-row>
+                <div class="text-label tvl-label">
+                    {{ chainsStatistic.tvl.label }}
+                </div>
+            </div>
+            <div class="insurance-container">
+                <div class="value-label insurance-value">
+                    {{ chainsStatistic.insuranceFund.value }}
+                </div>
+                <div class="text-label insurance-labe">
+                    {{ chainsStatistic.insuranceFund.label }}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -55,18 +58,13 @@ export default {
     name: "MainCardPcv",
 
     props: {
-        label: {
-            type: String,
-            default: null,
-        },
-
         info: {
             type: String,
             default: null,
         },
 
-        value: {
-            type: String,
+        chainsStatistic: {
+            type: Object,
             default: null,
         },
     },
@@ -95,103 +93,138 @@ export default {
 
 /* mobile */
 @media only screen and (max-width: 1400px) {
-    .value-label {
+    .main-card-container {
+        width: 344px;
+        height: 236px;
+    }
+
+    .info-label-container {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+     }
+
+    .info-label {
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.03em;
+    }
+
+    .info-container {
+      padding-top: 47px;
+      padding-bottom: 42px;
+      padding-left: 20px;
+    }
+
+    .tvl-container {
+    }
+
+    .tvl-value {
         font-style: normal;
         font-weight: 400;
         font-size: 40px;
-        line-height: 42px;
+        line-height: 48px;
     }
 
-    .text-label {
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
-        letter-spacing: 0.04em !important;
-    }
-
-    .info-label {
+    .tvl-label {
         font-style: normal;
         font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 0.02em;
+        padding-top: 4px;
+    }
+
+    .insurance-value {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 28px;
+        line-height: 32px;
+    }
+
+    .insurance-container {
+        padding-top: 23px;
+    }
+
+    .insurance-labe {
         font-size: 12px;
         line-height: 16px;
         letter-spacing: 0.03em;
+        padding-top: 4px;
     }
 
-    .main-card-container {
-        min-height: 166px !important;
-        width: 344px !important;
-    }
-
-    .value-row, .label-row {
-        margin-left: 25px !important;
-    }
-
-    .info-row {
-        margin-right: 14px !important;
-        margin-top: 10px !important;
-    }
-
-    .value-row {
-        margin-top: 37px !important;
-        margin-bottom: 12px !important;
+    .shield-img-mobile {
+        right: 13px;
+        top: 111px;
     }
 
     .shield-img {
         display: none !important;
     }
 
-    .shield-img-mobile {
-        margin-left: 246px;
-        margin-top: 8px;
-    }
 }
 
 @media only screen and (min-width: 1400px) {
-    .value-label {
+    .main-card-container {
+        width: 527px !important;
+        height: 277px;
+    }
+
+    .info-label-container {
+        position: absolute;
+        right: 24px;
+        top: 22px;
+    }
+
+    .info-label {
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+    }
+
+    .info-container {
+        padding-top: 46px;
+        padding-bottom: 41px;
+        padding-left: 41px;
+     }
+
+    .tvl-container {
+    }
+
+    .tvl-value {
         font-style: normal;
         font-weight: 400;
         font-size: 54px;
         line-height: 60px;
     }
 
-    .text-label {
+    .insurance-value {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 36px;
+        line-height: 44px;
+    }
+
+    .tvl-label {
         font-style: normal;
         font-weight: 400;
         font-size: 20px;
         line-height: 24px;
         letter-spacing: 0.04em !important;
+        padding-top: 8px;
     }
 
-    .info-label {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 18px;
-        letter-spacing: 0.04em;
+    .insurance-container {
+        padding-top: 28px;
     }
 
-    .main-card-container {
-        min-height: 254px !important;
-        width: 527px !important;
-    }
-
-    .value-row, .label-row {
-        margin-left: 44px !important;
-    }
-
-    .info-row {
-        margin-right: 20px !important;
-        margin-top: 20px !important;
-    }
-
-    .value-row {
-        margin-top: 56px !important;
-        margin-bottom: 22px !important;
+    .insurance-labe {
+        padding-top: 8px;
     }
 
     .shield-img {
-        margin-left: 327px;
-        margin-top: 18px;
+        right: 38px;
+        top: 95px;
     }
 
     .shield-img-mobile {
@@ -218,6 +251,7 @@ export default {
 .main-card-container {
     border: 1px solid #29323E !important;
     background: #0A1632 !important;
+    position: relative;
 }
 
 .value-label {
